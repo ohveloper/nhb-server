@@ -1,15 +1,17 @@
 import express, { Application } from 'express';
 import https from 'https';
 import fs from 'fs';
-import morgan from 'morgan'
+import morgan from 'morgan';
+import cors from 'cors';
 import indexRouter from './routers/index';
 import feedRouter from './routers/feed';
 import mainRouter from './routers/main';
-import userRouter from './routers/user'
+import userRouter from './routers/user';
 
 const port: number = 5000;
 const app: Application = express();
 
+app.use(cors());
 app.use(morgan('dev'));
 app.use('/', indexRouter);
 app.use('/feed', feedRouter);
