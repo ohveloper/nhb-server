@@ -16,11 +16,12 @@
 
 # 🛠️ Architecture
 ### Client Workflow
+![NHB (1)](https://user-images.githubusercontent.com/67426853/113650913-ff426180-96cb-11eb-98a8-6b6ddab9642f.jpg)
 
 
 ### Server Workflow
+![NHB (2)](https://user-images.githubusercontent.com/67426853/113650920-02d5e880-96cc-11eb-833d-a24d01397a90.jpg)
 
-<br>
 
 # 😈 Team BBBA!
 <table>
