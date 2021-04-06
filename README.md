@@ -72,3 +72,7 @@
     </tr>
   </tbody>
   </table>
+<br>
+
+# 📔 WIKI
+[Check out Our Wiki!](https://github.com/codestates/nhb-server/wiki)
