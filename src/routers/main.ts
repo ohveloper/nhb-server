@@ -1,9 +1,8 @@
-import { Router, Request, Response, NextFunction } from 'express';
+import { Router } from 'express';
+const { authEmail } = require('../controllers/main');
 
 const router = Router();
 
-router.get('/', (req:Request, res:Response, next: NextFunction) => {
-  res.send('this is /main router');
-})
+router.get('/authEmail', authEmail);
 
 export default router;
