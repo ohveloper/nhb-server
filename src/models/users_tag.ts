@@ -2,32 +2,34 @@ import {
   DataTypes, 
   Model, 
 } from 'sequelize';
-import {sequelize} from './index';
+import { sequelize } from './index';
 import { Users } from './user';
+import { Tags } from './tag'
 
-interface OauthsAttributes {
-  platform : string,
-  oAuthId : number,
-  userId : number
+interface Users_tagsAttributes {
+  id?: number,
+  content: string,
+  tagId: number,
+  userId: number
 };
 
-export class OAuths extends Model <OauthsAttributes> {
+export class Users_tags extends Model <Users_tagsAttributes> {
   public readonly id!: number;
-  public platform!: string;
-  public oAuthId!: number;
+  public content!: string;
+  public tagId!: number;
   public userId!: number;
 
   public static associations: {
   };
 };
 
-OAuths.init(
+Users_tags.init(
   {
-    platform: {
+    content: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    oAuthId: {
+    tagId: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
@@ -37,14 +39,19 @@ OAuths.init(
     }
   },
   {
-    modelName: 'OAuths',
-    tableName: 'oauths',
+    modelName: 'Users_tags',
+    tableName: 'users_tags',
     sequelize,
     freezeTableName: true,
   }
 )
 
-Users.hasMany(OAuths, {
+Users.hasMany(Users_tags, {
   sourceKey : "id",
   foreignKey : "userId",
 });
+
+Tags.hasMany(Users_tags, {
+  sourceKey: 'id',
+  foreignKey: 'tagId'
+})
