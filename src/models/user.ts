@@ -14,7 +14,7 @@ import {sequelize} from './index';
 // import { OAuths } from './oauth'; //? 관계를 정의할 모델 불러오기
 
 interface UsersAttributes {
-  id?: number | null;
+  id?: number;
   email : string,
   nickname : string,
   introduction: string | null,

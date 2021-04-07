@@ -4,30 +4,28 @@ import {
 } from 'sequelize';
 import {sequelize} from './index';
 import { Users } from './user';
+import { Feeds } from './feed'
 
-interface OauthsAttributes {
-  platform : string,
-  oAuthId : number,
-  userId : number
+interface LikesAttributes {
+  id?: number,
+  feedId: number,
+  userId: number,
+  createdAt?: Date,
+  updatedAt?: Date
 };
 
-export class OAuths extends Model <OauthsAttributes> {
+export class Likes extends Model <LikesAttributes> {
   public readonly id!: number;
-  public platform!: string;
-  public oAuthId!: number;
+  public feedId!: number;
   public userId!: number;
 
   public static associations: {
   };
 };
 
-OAuths.init(
+Likes.init(
   {
-    platform: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    oAuthId: {
+    feedId: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
@@ -37,14 +35,19 @@ OAuths.init(
     }
   },
   {
-    modelName: 'OAuths',
-    tableName: 'oauths',
+    modelName: 'Likes',
+    tableName: 'likes',
     sequelize,
     freezeTableName: true,
   }
 )
 
-Users.hasMany(OAuths, {
+Users.hasMany(Likes, {
   sourceKey : "id",
   foreignKey : "userId",
+});
+
+Feeds.hasMany(Likes, {
+  sourceKey: 'id',
+  foreignKey: 'feedId'
 });

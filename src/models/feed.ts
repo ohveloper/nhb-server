@@ -2,32 +2,34 @@ import {
   DataTypes, 
   Model, 
 } from 'sequelize';
-import {sequelize} from './index';
+import { sequelize } from './index';
 import { Users } from './user';
+import { Topics } from './topic';
 
-interface OauthsAttributes {
-  platform : string,
-  oAuthId : number,
-  userId : number
+interface FeedsAttributes {
+  id?: number,
+  content: string,
+  topicId: number,
+  userId: number
 };
 
-export class OAuths extends Model <OauthsAttributes> {
+export class Feeds extends Model <FeedsAttributes> {
   public readonly id!: number;
-  public platform!: string;
-  public oAuthId!: number;
+  public content!: string;
+  public topicId!: number;
   public userId!: number;
 
   public static associations: {
   };
 };
 
-OAuths.init(
+Feeds.init(
   {
-    platform: {
+    content: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    oAuthId: {
+    topicId: {
       type: DataTypes.INTEGER,
       allowNull: false
     },
@@ -37,14 +39,19 @@ OAuths.init(
     }
   },
   {
-    modelName: 'OAuths',
-    tableName: 'oauths',
+    modelName: 'Feeds',
+    tableName: 'feeds',
     sequelize,
     freezeTableName: true,
   }
 )
 
-Users.hasMany(OAuths, {
+Users.hasMany(Feeds, {
   sourceKey : "id",
   foreignKey : "userId",
 });
+
+Topics.hasMany(Feeds, {
+  sourceKey: 'id',
+  foreignKey: 'topicId'
+})

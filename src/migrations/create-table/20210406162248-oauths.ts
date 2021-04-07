@@ -2,7 +2,7 @@ import { OAuths } from '../../models/oauth';
 
 console.log("======Create OAuths Table======");
 
-const create_table_oauths = async() => {
+const create_table_OAuths = async() => {
   await OAuths.sync({force: true})
   .then(() => {
     console.log("✅Success Create OAuths Table");
@@ -12,4 +12,4 @@ const create_table_oauths = async() => {
   })
 };
 
-create_table_oauths();
+create_table_OAuths();
