@@ -1,8 +1,26 @@
 <html>
 <body>
   <div>
-    <p style='color:black'>아래의 링크는 1시간 후에 만료됩니다.</p>
+    <% if(display !== 'none') {%>
+      <div style='overflow:scroll; width:300px; height:150px; padding:10px; border: 1px solid black;'>
+        div 태그에
+        overflow:scroll; 이라는 스타일을 지정해 주면, div 내용이 넘치든 아니든, 항상 스크롤바가 붙습니다. 이것이 가장 많이 쓰이고 가장 무난하더군요.
+        overflow:auto; 라는 스타일을 지정해 주면, 내용이 div 박스 밖으로 넘칠 때에만 스크롤바가 붙습니다. 이것도 많이 쓰이는 편이지만, 내용물의 양에 따라서, 스크롤바가 붙었다 안 붙었다 하기에 디자인에 좀 어려움이 있습니다.
+        overflow:hidden; 으로 하면, div 박스 밖으로 넘치는 것은 보여주지 않고 그냥 숨겨 버립니다. 스크롤바도 붙지 않습니다. 특별한 목적이 있을 때에만 쓰입니다.
+        white-space:nowrap;
+        문자열이 길면 다음줄로 자동으로 행갈이가 되는데, nowrap 은 행갈이를 하지 말고 한 줄로 길게 이어서 쓰라는 의미입니다. 프로그래밍 소스 코드 등을 표현할 때에는 행갈이를 하지 않는 것이 자연스럽습니다.
+        width:300px; height:150px;
+        div 박스의 가로 세로 크기를 지정하는 것인데, 퍼센트(%)로 지정해도 좋습니다. height 속성을 생략하면 문장의 분량에 맞게 div 박스의 세로 길이가 자동으로 정해집니다. 둘 다 생략하면 스크롤바가 만들어지지 않을 수도 있습니다.
+        padding:10px;
+        div 박스 안으로 약간의 여백을 주어 보기 좋게 하는 것입니다. 필수적인 것은 아닙니다.
+        background-color:gold;
+        div 박스의 바탕색을 지정하는 것입니다. 필수적인 것은 아닙니다.
+        div, 특히 스크롤바를 붙인 div 박스는, IE와 파이어폭스에서 서로 다르게 보이는 경우가 많기에 주의가 필요합니다.
+      </div>
+      <div>회원가입을 완료하면 자동으로 동의가 됩니다.<div>
+    <% } %>
     <a href='<%= clientAddr %>/<%= endPoint %>?authCode=<%= authCode %>'>이곳을 눌러 <%= action %>을 완료해주세요</a>
+    <p style='color:black'>위 링크는 1시간 후에 만료됩니다.</p>
   </div>
 </body>
 </html>
