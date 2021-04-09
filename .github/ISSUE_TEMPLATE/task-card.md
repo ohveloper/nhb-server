@@ -10,7 +10,7 @@ assignees: ''
 **Assignee** : 작성자 본명
 
 ### ISSUE
-- Group:  `server`, `sr`
+- Group:  `server`
 - Type: `bug`, `feature`, `delete`, `fix`
 - Detail: fix actions from client redux
 
