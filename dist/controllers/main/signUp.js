@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config;
+dotenv_1.default.config();
 const user_1 = require("../../models/user");
 const signUp = async (req, res, next) => {
     const { authCode } = req.body;
@@ -17,7 +17,7 @@ const signUp = async (req, res, next) => {
     else {
         //? 만약 있다면
         const email = String(userInfo.getDataValue('email'));
-        const nickName = String(userInfo.getDataValue('nickname'));
+        const nickName = String(userInfo.getDataValue('nickName'));
         const id = Number(userInfo.id);
         //? 토큰 발급하는 함수
         const issueToken = (secret, expiresIn) => {
