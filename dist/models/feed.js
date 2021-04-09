@@ -32,8 +32,18 @@ Feeds.init({
 user_1.Users.hasMany(Feeds, {
     sourceKey: "id",
     foreignKey: "userId",
+    as: 'usersFeeds'
+});
+Feeds.belongsTo(user_1.Users, {
+    foreignKey: 'userId',
+    as: 'usersFeeds'
 });
 topic_1.Topics.hasMany(Feeds, {
     sourceKey: 'id',
-    foreignKey: 'topicId'
+    foreignKey: 'topicId',
+    as: 'topicsFeeds'
+});
+Feeds.belongsTo(topic_1.Topics, {
+    foreignKey: 'topicId',
+    as: 'topicsFeeds'
 });

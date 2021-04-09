@@ -32,8 +32,18 @@ Comments.init({
 user_1.Users.hasMany(Comments, {
     sourceKey: "id",
     foreignKey: "userId",
+    as: 'commentsUserId'
+});
+Comments.belongsTo(user_1.Users, {
+    foreignKey: 'userId',
+    as: 'commentsUserId'
 });
 feed_1.Feeds.hasMany(Comments, {
     sourceKey: 'id',
-    foreignKey: 'feedId'
+    foreignKey: 'feedId',
+    as: 'commentsFeedId'
+});
+Comments.belongsTo(feed_1.Feeds, {
+    foreignKey: 'feedId',
+    as: 'commentsFeedId'
 });

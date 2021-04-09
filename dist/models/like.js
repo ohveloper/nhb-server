@@ -28,8 +28,18 @@ Likes.init({
 user_1.Users.hasMany(Likes, {
     sourceKey: "id",
     foreignKey: "userId",
+    as: 'usersLikes',
+});
+Likes.belongsTo(user_1.Users, {
+    as: 'usersLikes',
+    foreignKey: 'userId'
 });
 feed_1.Feeds.hasMany(Likes, {
     sourceKey: 'id',
-    foreignKey: 'feedId'
+    foreignKey: 'feedId',
+    as: 'feedsLikes',
+});
+Likes.belongsTo(feed_1.Feeds, {
+    foreignKey: 'feedId',
+    as: 'feedsLikes',
 });

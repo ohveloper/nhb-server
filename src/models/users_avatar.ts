@@ -34,7 +34,7 @@ Users_avatars.init(
   },
   {
     modelName: 'Users_avatars',
-    tableName: 'Users_avatars',
+    tableName: 'users_avatars',
     sequelize,
     freezeTableName: true,
   }

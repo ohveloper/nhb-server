@@ -11,21 +11,25 @@ import {
   Association
 } from 'sequelize';
 import {sequelize} from './index';
+import { Likes } from './like';
+import { Users_tags } from './users_tag';
 // import { OAuths } from './oauth'; //? 관계를 정의할 모델 불러오기
 
 interface UsersAttributes {
   id?: number;
-  email : string,
-  nickname : string,
-  introduction: string | null,
-  authCode: string | null,
-  status: number
+  email : string;
+  nickName : string;
+  introduction: string | null;
+  authCode: string | null;
+  status: number;
+  usersLikes?: any;
+  userIdTag?: any;
 };
 
 export class Users extends Model<UsersAttributes>{
   public readonly id! : number;   //굳이 안넣어줘도 될 것 같지만 공식문서에 있으니깐 일단 넣어줌.
   public email! : string;
-  public nickname! : string;
+  public nickName! : string;
   public introduction!: string;
   public authCode!: string;
   public status!: number;
@@ -40,8 +44,9 @@ export class Users extends Model<UsersAttributes>{
   // public hasScores!: HasManyHasAssociationMixin<Scores, number>;
   // public countScores!: HasManyCountAssociationsMixin;
   // public createScores!: HasManyCreateAssociationMixin<Scores>;
-//? association 정의 -> 하단에서 관계 정의를 해주면 굳이 해줄 필요가 없었다.
+//? association 정의 나중에 join을 할 때 as로써 구분하여 활용
   public static associations: {
+    // usersoAuths:Association<Users, OAuth>
   };
 }
 
@@ -52,7 +57,7 @@ Users.init(
         type : DataTypes.STRING(45),
         allowNull: false
       },
-      nickname : {
+      nickName : {
         type : DataTypes.STRING(45),
         allowNull : false
       },
@@ -81,4 +86,5 @@ Users.init(
 // Users.hasMany(OAuths, {
 //   sourceKey : "id",
 //   foreignKey : "userId",
+//   as: 위에서 정의한 association 이름
 // });

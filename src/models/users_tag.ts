@@ -1,4 +1,5 @@
 import {
+  Association,
   DataTypes, 
   Model, 
 } from 'sequelize';
@@ -8,25 +9,27 @@ import { Tags } from './tag'
 
 interface Users_tagsAttributes {
   id?: number,
-  content: string,
+  isUsed: number,
   tagId: number,
   userId: number
 };
 
 export class Users_tags extends Model <Users_tagsAttributes> {
   public readonly id!: number;
-  public content!: string;
+  public isUsed!: number;
   public tagId!: number;
   public userId!: number;
 
   public static associations: {
+    userIdTag: Association<Users_tags, Users>;
+    tagIdTag: Association<Users_tags, Tags>;
   };
 };
 
 Users_tags.init(
   {
-    content: {
-      type: DataTypes.STRING,
+    isUsed: {
+      type: DataTypes.INTEGER,
       allowNull: false
     },
     tagId: {
@@ -49,9 +52,21 @@ Users_tags.init(
 Users.hasMany(Users_tags, {
   sourceKey : "id",
   foreignKey : "userId",
+  as: 'userIdTag'
+});
+
+Users_tags.belongsTo(Users, {
+  foreignKey: 'userId',
+  as: 'userIdTag'
 });
 
 Tags.hasMany(Users_tags, {
   sourceKey: 'id',
-  foreignKey: 'tagId'
-})
+  foreignKey: 'tagId',
+  as: 'tagIdTag'
+});
+
+Users_tags.belongsTo(Tags, {
+  foreignKey: 'tagId',
+  as: 'tagIdTag'
+});

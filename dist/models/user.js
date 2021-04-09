@@ -13,7 +13,7 @@ Users.init({
         type: sequelize_1.DataTypes.STRING(45),
         allowNull: false
     },
-    nickname: {
+    nickName: {
         type: sequelize_1.DataTypes.STRING(45),
         allowNull: false
     },
@@ -39,4 +39,5 @@ Users.init({
 // Users.hasMany(OAuths, {
 //   sourceKey : "id",
 //   foreignKey : "userId",
+//   as: 위에서 정의한 association 이름
 // });
