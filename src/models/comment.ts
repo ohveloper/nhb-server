@@ -1,17 +1,19 @@
 import {
+  Association,
   DataTypes, 
   Model, 
 } from 'sequelize';
 import { sequelize } from './index';
 import { Users } from './user';
 import { Feeds } from './feed';
-import { Topics } from './topic';
 
 interface CommentsAttributes {
-  id?: number,
-  comment: string,
-  feedId: number,
-  userId: number
+  id?: number;
+  comment: string;
+  feedId: number;
+  userId: number;
+  commentsFeedId?: any;
+  commentsUserId?: any;
 };
 
 export class Comments extends Model <CommentsAttributes> {
@@ -21,6 +23,8 @@ export class Comments extends Model <CommentsAttributes> {
   public userId!: number;
 
   public static associations: {
+    commentsFeedId: Association<Feeds, Comments>;
+    commentsUserId: Association<Users, Comments>;
   };
 };
 
@@ -50,9 +54,21 @@ Comments.init(
 Users.hasMany(Comments, {
   sourceKey : "id",
   foreignKey : "userId",
+  as: 'commentsUserId'
+});
+
+Comments.belongsTo(Users, {
+  foreignKey: 'userId',
+  as: 'commentsUserId'
 });
 
 Feeds.hasMany(Comments, {
   sourceKey: 'id',
-  foreignKey: 'feedId'
+  foreignKey: 'feedId',
+  as: 'commentsFeedId'
+});
+
+Comments.belongsTo(Feeds, {
+  foreignKey: 'feedId',
+  as: 'commentsFeedId'
 });

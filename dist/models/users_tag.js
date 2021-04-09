@@ -11,8 +11,8 @@ class Users_tags extends sequelize_1.Model {
 exports.Users_tags = Users_tags;
 ;
 Users_tags.init({
-    content: {
-        type: sequelize_1.DataTypes.STRING,
+    isUsed: {
+        type: sequelize_1.DataTypes.INTEGER,
         allowNull: false
     },
     tagId: {
@@ -32,8 +32,18 @@ Users_tags.init({
 user_1.Users.hasMany(Users_tags, {
     sourceKey: "id",
     foreignKey: "userId",
+    as: 'userIdTag'
+});
+Users_tags.belongsTo(user_1.Users, {
+    foreignKey: 'userId',
+    as: 'userIdTag'
 });
 tag_1.Tags.hasMany(Users_tags, {
     sourceKey: 'id',
-    foreignKey: 'tagId'
+    foreignKey: 'tagId',
+    as: 'tagIdTag'
+});
+Users_tags.belongsTo(tag_1.Tags, {
+    foreignKey: 'tagId',
+    as: 'tagIdTag'
 });

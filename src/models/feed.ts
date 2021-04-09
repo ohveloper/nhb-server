@@ -1,4 +1,5 @@
 import {
+  Association,
   DataTypes, 
   Model, 
 } from 'sequelize';
@@ -20,6 +21,8 @@ export class Feeds extends Model <FeedsAttributes> {
   public userId!: number;
 
   public static associations: {
+    usersFeeds: Association<Users, Feeds>;
+    topicsFeeds: Association<Topics, Feeds>;
   };
 };
 
@@ -49,9 +52,21 @@ Feeds.init(
 Users.hasMany(Feeds, {
   sourceKey : "id",
   foreignKey : "userId",
+  as: 'usersFeeds'
+});
+
+Feeds.belongsTo(Users, {
+  foreignKey: 'userId',
+  as: 'usersFeeds'
 });
 
 Topics.hasMany(Feeds, {
   sourceKey: 'id',
-  foreignKey: 'topicId'
+  foreignKey: 'topicId',
+  as: 'topicsFeeds'
+});
+
+Feeds.belongsTo(Topics, {
+  foreignKey: 'topicId',
+  as: 'topicsFeeds'
 })

@@ -25,7 +25,7 @@ const refreshToken = async (req, res, next) => {
                 //? 토큰이 만료되지 않았을 때 액세스 토큰 재발급
                 const userInfo = await user_1.Users.findOne({ where: { id: decoded.id } });
                 if (!userInfo) {
-                    res.status(401).json({ message: "refresh token expired" });
+                    res.status(404).json({ message: "user not found" });
                 }
                 else {
                     const accessToken = await jsonwebtoken_1.default.sign({ id: userInfo.id }, refTokenSecret, { expiresIn: '5h' });

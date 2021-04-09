@@ -11,6 +11,11 @@ dotenv_1.default.config();
 // const memoAuthCode: string[] = []; //? 코드 중복 검사용
 const authEmail = async (req, res, next) => {
     const { email } = req.body;
+    const vaildCheck = email.indexOf('@');
+    if (!email || email.length === 0 || vaildCheck === -1) {
+        return res.status(400).json({ message: 'need accurate information' });
+    }
+    ;
     //? 랜덤 코드 생성 겹칠일이 없을거란 생각. 만약 겹친다면 memoization으로 검사.
     // const issueAuthCode = (): string => {
     //   const temp: string = String(Math.random().toString(36).slice(2));
@@ -67,10 +72,10 @@ const authEmail = async (req, res, next) => {
         }
         else {
             //? 데이터베이스에 정보가 없을 때
-            const nickname = '시인' + Math.random().toString(36).slice(2);
+            const nickName = '시인' + Math.random().toString(36).slice(2);
             //? 회원가입 전 임시 데이터 베이스를 만들어 준다. 
             //? 만약 링크를 누른다면 signUp 메소드에서 status -> 1(회원).
-            await user_1.Users.create({ email, nickname, introduction: null, authCode, status: 0 });
+            await user_1.Users.create({ email, nickName, introduction: null, authCode, status: 0 });
             //? 1시간 안에 완료하지 않을 시 데이터베이스 자체를 파괴.
             setTimeout(async () => {
                 await user_1.Users.findOne({ where: { authCode } }).then(async (data) => {

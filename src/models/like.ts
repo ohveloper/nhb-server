@@ -1,4 +1,5 @@
 import {
+  Association,
   DataTypes, 
   Model, 
 } from 'sequelize';
@@ -20,6 +21,8 @@ export class Likes extends Model <LikesAttributes> {
   public userId!: number;
 
   public static associations: {
+    usersLikes: Association<Users, Likes>;
+    feedsLikes: Association<Feeds, Likes>;
   };
 };
 
@@ -45,9 +48,21 @@ Likes.init(
 Users.hasMany(Likes, {
   sourceKey : "id",
   foreignKey : "userId",
+  as: 'usersLikes',
+});
+
+Likes.belongsTo(Users, {
+  as: 'usersLikes',
+  foreignKey: 'userId'
 });
 
 Feeds.hasMany(Likes, {
   sourceKey: 'id',
-  foreignKey: 'feedId'
+  foreignKey: 'feedId',
+  as: 'feedsLikes',
+});
+
+Likes.belongsTo(Feeds, {
+  foreignKey: 'feedId',
+  as: 'feedsLikes',
 });

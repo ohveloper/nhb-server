@@ -9,6 +9,12 @@ class Topics extends sequelize_1.Model {
 exports.Topics = Topics;
 ;
 Topics.init({
+    id: {
+        type: sequelize_1.DataTypes.INTEGER,
+        allowNull: false,
+        primaryKey: true,
+        autoIncrement: true
+    },
     word: {
         type: sequelize_1.DataTypes.STRING,
         allowNull: false

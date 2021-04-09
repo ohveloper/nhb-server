@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction} from 'express';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-dotenv.config;
+dotenv.config();
 import { Users } from '../../models/user';
 
 const login = async (req: Request, res: Response, next: NextFunction) => {

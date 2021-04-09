@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction} from 'express';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-dotenv.config;
+dotenv.config();
 import { Users } from '../../models/user';
 
 const signUp = async (req: Request, res: Response, next: NextFunction) => {
@@ -13,7 +13,7 @@ const signUp = async (req: Request, res: Response, next: NextFunction) => {
   } else {
     //? 만약 있다면
     const email = String(userInfo.getDataValue('email'));
-    const nickName = String(userInfo.getDataValue('nickname'));
+    const nickName = String(userInfo.getDataValue('nickName'));
     const id = Number(userInfo.id)
     //? 토큰 발급하는 함수
     const issueToken = (secret: string, expiresIn: string) => {
@@ -21,7 +21,7 @@ const signUp = async (req: Request, res: Response, next: NextFunction) => {
     };
     //? 코드가 일치하는 데이터 베이스의 스테이터스 코드 1(회원) 으로 바꾸고 코드 초기화 후
     //? 토큰 발급 후 전송
-    await Users.update({authCode: null, status: 1}, {where: { id}}).then( data => {
+    await Users.update({authCode: null, status: 1}, {where: { id }}).then( data => {
         const accTokenSecret = process.env.ACCTOKEN_SECRET || 'acctest';
         const refTokenSecret = process.env.REFTOKEN_SECRET || 'reftest';
         const domain = process.env.CLIENT_DOMAIN || 'localhost';

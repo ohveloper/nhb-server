@@ -1,14 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const comment_like_1 = require("../../models/comment_like");
-console.log("======Create Comment_likes Table======");
-const create_table_Comment_likes = async () => {
-    await comment_like_1.Comment_likes.sync({ force: true })
+const comments_like_1 = require("../../models/comments_like");
+console.log("======Create Comments_likes Table======");
+const create_table_Comments_likes = async () => {
+    await comments_like_1.Comments_likes.sync({ force: true })
         .then(() => {
-        console.log("✅Success Create Comment_likes Table");
+        console.log("✅Success Create Comments_likes Table");
     })
         .catch((err) => {
-        console.log("❗️Error in Create Comment_likes Table : ", err);
+        console.log("❗️Error in Create Comments_likes Table : ", err);
     });
 };
-create_table_Comment_likes();
+create_table_Comments_likes();
