@@ -22,11 +22,14 @@ const clientAddr = process.env.CLIENT_ADDR || 'https://localhost:3000';
 app.use(morgan_1.default('dev'));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
-app.use(cors_1.default({
-    origin: [clientAddr],
-    credentials: true,
-    methods: ["GET", "POST", "OPTIONS"]
-}));
+//? cors 배포 후 설정 테스트 !! 중요!
+app.use(cors_1.default(
+// {
+//   origin: [clientAddr],
+//   credentials: true,
+//   methods: ["GET", "POST", "OPTIONS", "DELETE", "PUT", "PATCH"]
+// }
+));
 app.use(cookie_parser_1.default());
 app.use('/', index_1.default);
 app.use('/feed', feed_1.default);

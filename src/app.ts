@@ -21,11 +21,14 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(cors({
-  origin: [clientAddr],
-  credentials: true,
-  methods: ["GET", "POST", "OPTIONS"]
-}));
+//? cors 배포 후 설정 테스트 !! 중요!
+app.use(cors(
+  // {
+  //   origin: [clientAddr],
+  //   credentials: true,
+  //   methods: ["GET", "POST", "OPTIONS", "DELETE", "PUT", "PATCH"]
+  // }
+));
 app.use(cookieParser());
 
 app.use('/', indexRouter);
