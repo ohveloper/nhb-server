@@ -23,11 +23,11 @@ app.use(express.urlencoded({ extended: true }));
 
 //? cors 배포 후 설정 테스트 !! 중요!
 app.use(cors(
-  // {
-  //   origin: [clientAddr],
-  //   credentials: true,
-  //   methods: ["GET", "POST", "OPTIONS", "DELETE", "PUT", "PATCH"]
-  // }
+  {
+    origin: [clientAddr],
+    credentials: true,
+    methods: ["GET", "POST", "OPTIONS", "DELETE", "PUT", "PATCH"]
+  }
 ));
 app.use(cookieParser());
 
@@ -55,7 +55,13 @@ if (fs.existsSync('./key.pem') && fs.existsSync('./cert.pem')) {
     }) //? db연결 확인 서버를 켤 때마다 확인
   });
 } else {
-  server = app.listen(port, () => {
+  server = app.listen(port, async () => {
     console.log('http server on ' + port);
+    await sequelize.authenticate().then(async () => {
+      console.log('connection success');
+    })
+    .catch(e => {
+      console.log(e);
+    })
   });
 };

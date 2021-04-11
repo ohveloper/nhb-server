@@ -23,13 +23,11 @@ app.use(morgan_1.default('dev'));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 //? cors 배포 후 설정 테스트 !! 중요!
-app.use(cors_1.default(
-// {
-//   origin: [clientAddr],
-//   credentials: true,
-//   methods: ["GET", "POST", "OPTIONS", "DELETE", "PUT", "PATCH"]
-// }
-));
+app.use(cors_1.default({
+    origin: [clientAddr],
+    credentials: true,
+    methods: ["GET", "POST", "OPTIONS", "DELETE", "PUT", "PATCH"]
+}));
 app.use(cookie_parser_1.default());
 app.use('/', index_1.default);
 app.use('/feed', feed_1.default);
@@ -51,8 +49,14 @@ if (fs_1.default.existsSync('./key.pem') && fs_1.default.existsSync('./cert.pem'
     });
 }
 else {
-    server = app.listen(port, () => {
+    server = app.listen(port, async () => {
         console.log('http server on ' + port);
+        await models_1.sequelize.authenticate().then(async () => {
+            console.log('connection success');
+        })
+            .catch(e => {
+            console.log(e);
+        });
     });
 }
 ;
