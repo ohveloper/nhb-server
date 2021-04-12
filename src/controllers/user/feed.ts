@@ -46,7 +46,7 @@ const bringPrivateFeeds = async (req: Request, res: Response, next: NextFunction
                 {
                   model: Tags,
                   as: 'tagIdTag',
-                  attributes: ['tagName']
+                  attributes: ['id']
                 }
               ]
             }
@@ -92,7 +92,7 @@ const bringPrivateFeeds = async (req: Request, res: Response, next: NextFunction
   for (let i = 0; i < feeds.length; i += 1) {
     interface Feed {
       feedId: number;
-      user: {userId: number, nickName: string | number, tag: string | null};
+      user: {userId: number, nickName: string | number, tag: number | null};
       topic: string;
       content: string;
       likes: number;
@@ -109,9 +109,15 @@ const bringPrivateFeeds = async (req: Request, res: Response, next: NextFunction
       feedsLikes, 
       commentsFeedId} = feeds[i].get();
     let tag = null;
-    if (usersFeeds.userIdtag) {
-      tag = usersFeeds.userIdTag.filter((a: Users_tags) => a.isUsed === 1)[0].tagIdTag.tagName;
+
+    if (usersFeeds.userIdTag) {
+      const temp = usersFeeds.userIdTag.filter((a: Users_tags) => a.getDataValue('isUsed') === 1)[0];
+      if (temp) {
+        tag = temp.tagIdTag.id;
+      };
     }
+
+
     const feed: Feed = {
       feedId: id,
       user: {userId: usersFeeds.id, nickName: usersFeeds.nickName, tag},

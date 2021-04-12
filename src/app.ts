@@ -11,6 +11,7 @@ import indexRouter from './routers/index';
 import feedRouter from './routers/feed';
 import mainRouter from './routers/main';
 import userRouter from './routers/user';
+import blackListsHandler from './serverFunc/blackList';
 
 const port: number = 5000;
 const app: Application = express();
@@ -28,13 +29,15 @@ app.use(cors(
     credentials: true,
     methods: ["GET", "POST", "OPTIONS", "DELETE", "PATCH"]
   }
-));
-app.use(cookieParser());
-
-app.use('/', indexRouter);
-app.use('/feed', feedRouter);
-app.use('/user', userRouter);
-app.use('/main', mainRouter);
+  ));
+  app.use(cookieParser());
+  
+  app.use('/', indexRouter);
+  app.use('/feed', feedRouter);
+  app.use('/user', userRouter);
+  app.use('/main', mainRouter);
+  //? black lists 자동으로 정리 해주는 함수
+  blackListsHandler();
 
 let server;
 

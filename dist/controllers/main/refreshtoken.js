@@ -7,6 +7,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const user_1 = require("../../models/user");
+const blacklist_1 = require("../../models/blacklist");
 const refreshToken = async (req, res, next) => {
     const { refreshToken } = req.cookies;
     //? 헤더 내 쿠키에 리프레시 토큰이 없을 때
@@ -15,6 +16,14 @@ const refreshToken = async (req, res, next) => {
     }
     else {
         //? 있을 때 디코딩
+        const isBlocked = await blacklist_1.BlackLists.findOne({ where: { refreshToken } }).then(d => {
+            if (d)
+                return true;
+            else
+                return false;
+        });
+        if (isBlocked)
+            return res.status(401).json({ message: 'blocked reftoken' });
         const refTokenSecret = process.env.REFTOKEN_SECRET || 'reftest';
         await jsonwebtoken_1.default.verify(refreshToken, refTokenSecret, async (err, decoded) => {
             //? 토큰이 만료 되었을 때

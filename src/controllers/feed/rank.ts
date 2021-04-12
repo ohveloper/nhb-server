@@ -50,7 +50,7 @@ const rank = async (req: Request, res: Response, next: NextFunction) => {
       userId: number | undefined;
       nickName: string;
       likeNum: number;
-      tag: string | null;
+      tag: number | null;
     }
     //? 필요한 데이터를 뽑아온다.
     const { id, nickName, usersLikes, userIdTag } = slicedData[i].get();
@@ -59,7 +59,7 @@ const rank = async (req: Request, res: Response, next: NextFunction) => {
     //? 만약 사용중인 태그가 없으면 null 값을 준다.
     let tag = null;
     if (tempTag !== undefined) {
-      tag = tempTag.tagIdTag.dataValues.tagName;
+      tag = tempTag.tagIdTag.dataValues.id;
     };
 
     //? 형식대로 정리해서 rank에 담은 후 보내기

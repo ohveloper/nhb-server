@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
 import { Users } from '../../models/user';
+import { BlackLists } from '../../models/blacklist';
 
 const refreshToken = async (req: Request, res: Response, next: NextFunction) => {
   const { refreshToken } = req.cookies;
@@ -11,6 +12,13 @@ const refreshToken = async (req: Request, res: Response, next: NextFunction) => 
     res.status(401).json({message: "unauthorized"});
   } else {
     //? 있을 때 디코딩
+    const isBlocked = await BlackLists.findOne({where:{refreshToken}}).then(d => {
+      if (d) return true;
+      else return false;
+    });
+
+    if (isBlocked) return res.status(401).json({message: 'blocked reftoken'});
+    
     const refTokenSecret = process.env.REFTOKEN_SECRET || 'reftest';
     await jwt.verify(refreshToken, refTokenSecret, async (err: any, decoded: any) => {
       //? 토큰이 만료 되었을 때

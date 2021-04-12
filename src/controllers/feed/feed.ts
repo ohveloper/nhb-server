@@ -77,7 +77,7 @@ const feedHandler = {
                 {
                   model: Tags,
                   as: 'tagIdTag',
-                  attributes: ['tagName']
+                  attributes: ['id']
                 }
               ]
             }
@@ -108,7 +108,7 @@ const feedHandler = {
     for (let i = 0; i < feeds.length; i += 1) {
       interface Feed {
         feedId: number;
-        user: {userId: number, nickName: string | number, tag: string | null};
+        user: {userId: number, nickName: string | number, tag: number | null};
         topic: string;
         content: string;
         likes: number;
@@ -127,8 +127,11 @@ const feedHandler = {
         commentsFeedId} = feeds[i].get();
 
         let tag = null;
-        if (usersFeeds.userIdtag) {
-          tag = usersFeeds.userIdTag.filter((a: Users_tags) => a.isUsed === 1)[0].tagIdTag.tagName;
+        if (usersFeeds.userIdTag) {
+          const temp = usersFeeds.userIdTag.filter((a: Users_tags) => a.getDataValue('isUsed') === 1)[0];
+          if (temp) {
+            tag = temp.tagIdTag.id;
+          };
         }
 
         const feed: Feed = {

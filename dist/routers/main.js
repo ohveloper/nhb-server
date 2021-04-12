@@ -1,10 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const { authEmail, signUp, login, refreshToken } = require('../controllers/main');
+const { authEmail, signUp, login, refreshToken, logout } = require('../controllers/main');
 const router = express_1.Router();
 router.post('/authemail', authEmail);
 router.post('/signup', signUp);
 router.post('/login', login);
 router.get('/refreshtoken', refreshToken);
+router.get('/logout', logout);
 exports.default = router;
