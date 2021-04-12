@@ -21,6 +21,10 @@ Users.init({
         type: sequelize_1.DataTypes.STRING,
         allowNull: true
     },
+    avatarUrl: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: true
+    },
     authCode: {
         type: sequelize_1.DataTypes.STRING,
         allowNull: true

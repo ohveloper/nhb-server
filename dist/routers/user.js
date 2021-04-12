@@ -1,8 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
+const { bring, edit, withdrawal, feeds } = require('../controllers/user');
 const router = express_1.Router();
-router.get('/', (req, res, next) => {
-    res.send('this is /user router');
-});
+router.post('/', bring);
+router.patch('/', edit);
+router.delete('/', withdrawal);
+router.post('/feed', feeds);
 exports.default = router;

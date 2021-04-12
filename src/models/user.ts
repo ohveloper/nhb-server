@@ -11,8 +11,6 @@ import {
   Association
 } from 'sequelize';
 import {sequelize} from './index';
-import { Likes } from './like';
-import { Users_tags } from './users_tag';
 // import { OAuths } from './oauth'; //? 관계를 정의할 모델 불러오기
 
 interface UsersAttributes {
@@ -20,6 +18,7 @@ interface UsersAttributes {
   email : string;
   nickName : string;
   introduction: string | null;
+  avatarUrl: string | null;
   authCode: string | null;
   status: number;
   usersLikes?: any;
@@ -31,6 +30,7 @@ export class Users extends Model<UsersAttributes>{
   public email! : string;
   public nickName! : string;
   public introduction!: string;
+  public avatarUrl!: string | null;
   public authCode!: string;
   public status!: number;
 
@@ -62,6 +62,10 @@ Users.init(
         allowNull : false
       },
       introduction: {
+        type: DataTypes.STRING,
+        allowNull: true
+      },
+      avatarUrl: {
         type: DataTypes.STRING,
         allowNull: true
       },
