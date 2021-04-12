@@ -73,7 +73,7 @@ const authEmail = async (req:Request, res:Response, next:NextFunction) => {
       const nickName:string = '시인' + Math.random().toString(36).slice(2);
       //? 회원가입 전 임시 데이터 베이스를 만들어 준다. 
       //? 만약 링크를 누른다면 signUp 메소드에서 status -> 1(회원).
-      await Users.create({ email, nickName, introduction: null, authCode, status: 0 });
+      await Users.create({ email, nickName, introduction: null, authCode, status: 0, avatarUrl: null });
       //? 1시간 안에 완료하지 않을 시 데이터베이스 자체를 파괴.
       setTimeout(async () => {
         await Users.findOne({where: { authCode }}).then( async (data) => {
@@ -92,39 +92,39 @@ const authEmail = async (req:Request, res:Response, next:NextFunction) => {
     }
   });
   
-  //? ejs를 이용한 인증이메일 폼.
-  let authEmailForm;
-  //? 리다이렉선을 하고싶다면 .env 에서 수정
-  const clientAddr: string = process.env.CLIENT_ADDR || 'https://localhost:3000/'
-  ejs.renderFile(__dirname + '/authForm/authMail.ejs', { clientAddr, authCode, action, endPoint, display }, (err, data) => {
-    if (err) console.log(err);
-    authEmailForm = data;
-  })
+  // //? ejs를 이용한 인증이메일 폼.
+  // let authEmailForm;
+  // //? 리다이렉선을 하고싶다면 .env 에서 수정
+  // const clientAddr: string = process.env.CLIENT_ADDR || 'https://localhost:3000/'
+  // ejs.renderFile(__dirname + '/authForm/authMail.ejs', { clientAddr, authCode, action, endPoint, display }, (err, data) => {
+  //   if (err) console.log(err);
+  //   authEmailForm = data;
+  // })
 
-  //? 메일을 보내는 코드. 각 플렛폼에서 권한 설정부터!
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false,
-    auth: {
-        user: process.env.NODEMAILER_USER,
-        pass: process.env.NODEMAILER_PASSWD,
-    },
-  });
+  // //? 메일을 보내는 코드. 각 플렛폼에서 권한 설정부터!
+  // const transporter = nodemailer.createTransport({
+  //   service: 'gmail',
+  //   host: 'smtp.gmail.com',
+  //   port: 587,
+  //   secure: false,
+  //   auth: {
+  //       user: process.env.NODEMAILER_USER,
+  //       pass: process.env.NODEMAILER_PASSWD,
+  //   },
+  // });
 
-  await transporter.sendMail({
-    from: `BBBA <tkdfo93@gmail.com>`,
-    to: email,
-    subject: isUser ? 'NHB에 로그인을 완료해주세요!' : 'NHB의 회원이 되어주세요!',
-    html: authEmailForm,
-  }, (error, info) => {
-    if (error) {
-      console.log(error);
-    }
-    res.status(200).json({"message": action});
-    transporter.close();
-  });
+  // await transporter.sendMail({
+  //   from: `BBBA <tkdfo93@gmail.com>`,
+  //   to: email,
+  //   subject: isUser ? 'NHB에 로그인을 완료해주세요!' : 'NHB의 회원이 되어주세요!',
+  //   html: authEmailForm,
+  // }, (error, info) => {
+  //   if (error) {
+  //     console.log(error);
+  //   }
+  //   res.status(200).json({"message": action});
+  //   transporter.close();
+  // });
 
   res.send(authCode);
 };
