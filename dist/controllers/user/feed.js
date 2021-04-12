@@ -49,7 +49,7 @@ const bringPrivateFeeds = async (req, res, next) => {
                                 {
                                     model: tag_1.Tags,
                                     as: 'tagIdTag',
-                                    attributes: ['tagName']
+                                    attributes: ['id']
                                 }
                             ]
                         }
@@ -95,8 +95,12 @@ const bringPrivateFeeds = async (req, res, next) => {
         ;
         const { id, content, createdAt, updatedAt, topicsFeeds, usersFeeds, feedsLikes, commentsFeedId } = feeds[i].get();
         let tag = null;
-        if (usersFeeds.userIdtag) {
-            tag = usersFeeds.userIdTag.filter((a) => a.isUsed === 1)[0].tagIdTag.tagName;
+        if (usersFeeds.userIdTag) {
+            const temp = usersFeeds.userIdTag.filter((a) => a.getDataValue('isUsed') === 1)[0];
+            if (temp) {
+                tag = temp.tagIdTag.id;
+            }
+            ;
         }
         const feed = {
             feedId: id,
