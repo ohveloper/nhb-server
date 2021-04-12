@@ -28,8 +28,9 @@ const bringPrivateFeeds = async (req, res, next) => {
             return -1;
         return d;
     }) : null; //? 계속탐색
+    //? 만약 피드가 끝일 때
     if (preFeed === -1)
-        return res.status(200).json({ data: { userFeeds: [] }, message: 'ok' });
+        return res.status(200).json({ data: { privateFeeds: [] }, message: 'ok' });
     //? 시작점 기준으로 조회 limit으로 조회 범위 설정
     const feedsFunc = async (userId) => {
         return await feed_1.Feeds.findAll({ order: [['id', 'DESC']], limit,
