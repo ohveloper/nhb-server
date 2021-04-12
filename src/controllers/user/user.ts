@@ -78,7 +78,7 @@ const userHandler = {
 
   edit: (req: Request, res: Response, next: NextFunction) => {
     const { authorization } = req.headers;
-    const { avatarUrl, nickName, introduction} = req.body;
+    const { avatarUrl, nickName, introduction } = req.body;
     if (!authorization) return res.status(401).json({message: 'unauthoriazed'});
     if (!avatarUrl || !nickName || !introduction) return res.status(400).json({message: 'need accurate informations'});
 
