@@ -59,7 +59,13 @@ const feedHandler = {
             return res.status(400).json({ message: 'need accurate informaion' });
         //? 조회 시작 점 설정
         const lastFeed = await feed_1.Feeds.max('id'); //? 새로고침 밑의 null 자리에 넣고 변수 하나로 줄여도 됨
-        const preFeed = feedId ? await feed_1.Feeds.max('id', { where: { id: { [Op.lt]: feedId } } }) : null; //? 계속탐색
+        const preFeed = feedId ? await feed_1.Feeds.max('id', { where: { id: { [Op.lt]: feedId } } }).then(d => {
+            if (!d)
+                return -1;
+            return d;
+        }) : null; //? 계속탐색
+        if (preFeed === -1)
+            return res.status(200).json({ data: { userFeeds: [] }, message: 'ok' });
         //? 시작점 기준으로 조회 limit으로 조회 범위 설정
         const feeds = await feed_1.Feeds.findAll({ order: [['id', 'DESC']], limit,
             where: { id: { [Op.lte]: preFeed || lastFeed } },
@@ -100,6 +106,8 @@ const feedHandler = {
                 }
             ],
         }).catch(e => { console.log('get feeds error'); });
+        if (!feeds)
+            return res.status(200).json({ message: 'feeds do not exists' });
         //? 형식대로 피드 한곳에 모으기
         const userFeeds = [];
         for (let i = 0; i < feeds.length; i += 1) {
@@ -113,7 +121,7 @@ const feedHandler = {
                 feedId: id,
                 user: { userId: usersFeeds.id, nickName: usersFeeds.nickName, tag },
                 topic: topicsFeeds.word,
-                content,
+                content: JSON.parse(content),
                 likes: feedsLikes.length,
                 comments: commentsFeedId.length,
                 updatedAt,
@@ -122,7 +130,7 @@ const feedHandler = {
             userFeeds.push(feed);
         }
         ;
-        res.status(200).json({ data: userFeeds, message: 'ok' });
+        res.status(200).json({ data: { userFeeds }, message: 'ok' });
     },
     //? 피드 삭제 핸들러
     remove: async (req, res, next) => {

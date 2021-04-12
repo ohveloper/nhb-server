@@ -73,7 +73,7 @@ const authEmail = async (req:Request, res:Response, next:NextFunction) => {
       const nickName:string = '시인' + Math.random().toString(36).slice(2);
       //? 회원가입 전 임시 데이터 베이스를 만들어 준다. 
       //? 만약 링크를 누른다면 signUp 메소드에서 status -> 1(회원).
-      await Users.create({ email, nickName, introduction: null, authCode, status: 0 });
+      await Users.create({ email, nickName, introduction: null, authCode, status: 0, avatarUrl: null });
       //? 1시간 안에 완료하지 않을 시 데이터베이스 자체를 파괴.
       setTimeout(async () => {
         await Users.findOne({where: { authCode }}).then( async (data) => {
@@ -125,8 +125,6 @@ const authEmail = async (req:Request, res:Response, next:NextFunction) => {
     res.status(200).json({"message": action});
     transporter.close();
   });
-
-  res.send(authCode);
 };
 
 export default authEmail;
