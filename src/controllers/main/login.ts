@@ -37,7 +37,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
          "data": {
            "aceesToken": accessToken, 
          },
-         "message": "sign up successfully"
+         "message": "log in successfully"
        })
       }
     );

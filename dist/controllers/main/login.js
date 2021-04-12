@@ -39,7 +39,7 @@ const login = async (req, res, next) => {
                 "data": {
                     "aceesToken": accessToken,
                 },
-                "message": "sign up successfully"
+                "message": "log in successfully"
             });
         });
     }
