@@ -59,7 +59,9 @@ const userHandler = {
                 userlikeNum += usersFeeds[i].feedsLikes.length;
             }
             ;
-            const userInfo = { userId: id, nickName, introduction, tags, userlikeNum, createdAt, updatedAt };
+            const newCreatedAt = new Date(new Date(createdAt).setHours(new Date(createdAt).getHours() + 9));
+            const newUpdatedAt = new Date(new Date(updatedAt).setHours(new Date(updatedAt).getHours() + 9));
+            const userInfo = { userId: id, nickName, introduction, tags, userlikeNum, createdAt: newCreatedAt, updatedAt: newUpdatedAt };
             return userInfo;
         };
         if (!authorization && !userId)
@@ -93,7 +95,7 @@ const userHandler = {
             if (err)
                 return res.status(400).json({ message: 'invalid token' });
             await user_1.Users.update({ avatarUrl, nickName, introduction }, { where: { id: decoded.id } }).then(d => {
-                res.status(200).json({ message: 'edit successfully' });
+                res.status(200).json({ edittedInfo: { nickName, introduction, avatarUrl }, message: 'edit successfully' });
             });
         });
     },
