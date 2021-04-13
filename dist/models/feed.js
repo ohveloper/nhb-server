@@ -11,6 +11,16 @@ class Feeds extends sequelize_1.Model {
 exports.Feeds = Feeds;
 ;
 Feeds.init({
+    likeNum: {
+        type: sequelize_1.DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0
+    },
+    commentNum: {
+        type: sequelize_1.DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0
+    },
     content: {
         type: sequelize_1.DataTypes.STRING,
         allowNull: false
