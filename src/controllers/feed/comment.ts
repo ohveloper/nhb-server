@@ -138,13 +138,15 @@ const commentHandler = {
     const comments: {}[] = [];
     for (let i = 0; i < data.length; i += 1) {
       const { id, comment, createdAt, updatedAt, cmtLikesCommentId, commentsUserId } = data[i].get();
+      const newCreatedAt = new Date(new Date(createdAt).setHours(new Date(createdAt).getHours() + 9));
+      const newUpdatedAt = new Date(new Date(updatedAt).setHours(new Date(updatedAt).getHours() + 9));
       const cmt: Cmt = {
         user: {nickName: commentsUserId.nickName, userId: commentsUserId.id},
         commentId: id,
         comment,
         commentLike: cmtLikesCommentId.length,
-        createdAt,
-        updatedAt,
+        createdAt: newCreatedAt,
+        updatedAt: newUpdatedAt,
       };
 
       comments.push(cmt);

@@ -97,17 +97,29 @@ const feedHandler = {
           attributes: ['word'] 
         },
       ],
-      raw: true, attributes: ['id', 'content', 'likeNum', 'commentNum', 'createdAt', 'updatedAt']})
+      attributes: ['id', 'content', 'likeNum', 'commentNum', 'createdAt', 'updatedAt']})
       .catch(e => {console.log('get feeds error', e)});
+      
+      const userFeeds:{}[] = []
+      for (let i = 0; i < temp.length; i += 1) {
+        const { id, content, likeNum, commentNum, usersFeeds, topicsFeeds, createdAt, updatedAt } = temp[i];
+        let tag = null;
+        if (usersFeeds.userIdTag) {
+          for (let i = 0; i < usersFeeds.userIdTag.length; i += 1) {
+            if (usersFeeds.userIdTag[i].isUsed === 1) {
+              tag = usersFeeds.userIdTag[i].tagIdTag.id;
+              break;
+            }
+          }
+        }
+        const user = {userId: usersFeeds.id, nickName: usersFeeds.nickName, tag};
+        const newCreatedAt = new Date(new Date(createdAt).setHours(new Date(createdAt).getHours() + 9));
+        const newUpdatedAt = new Date(new Date(updatedAt).setHours(new Date(updatedAt).getHours() + 9));
 
-    const userFeeds = [];
-    for (let i = 0; i < temp.length; i += 1) {
-      const { id, content, likeNum, commentNum, createdAt, updatedAt } = temp[i];
-      const user = {userId: temp[i]['usersFeeds.id'], nickName: temp[i]['usersFeeds.nickName'], tag: temp[i]['usersFeeds.userIdTag.tagIdTag.id'] || null };
+        const userFeed = {feedId: id, user, topic: topicsFeeds.word, content, likeNum, commentNum, createdAt: newCreatedAt, updatedAt: newUpdatedAt};
+        userFeeds.push(userFeed);
+      }
 
-      const rst = {feedId: id, user, topic: temp[i]['topicsFeeds.word'], content, likeNum, commentNum, createdAt, updatedAt};
-      userFeeds.push(rst);
-    };
     res.status(200).json({data: {userFeeds}, message: 'ok'});
   },
 
