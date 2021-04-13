@@ -10,6 +10,8 @@ import { Topics } from './topic';
 interface FeedsAttributes {
   id?: number,
   content: string,
+  likeNum?: number,
+  commentNum?: number,
   topicId: number,
   userId: number
 };
@@ -28,6 +30,16 @@ export class Feeds extends Model <FeedsAttributes> {
 
 Feeds.init(
   {
+    likeNum: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0
+    },    
+    commentNum: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0
+    },
     content: {
       type: DataTypes.STRING,
       allowNull: false

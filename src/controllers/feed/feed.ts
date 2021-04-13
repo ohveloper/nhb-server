@@ -6,8 +6,6 @@ dotenv.config();
 import { Topics } from '../../models/topic';
 import { Feeds } from '../../models/feed';
 import { Users } from '../../models/user';
-import { Likes } from '../../models/like';
-import { Comments } from '../../models/comment';
 import { Users_tags } from '../../models/users_tag';
 import { Tags } from '../../models/tag';
 
@@ -47,22 +45,32 @@ const feedHandler = {
 
   //? 피드 가저오기
   bring: async (req: Request, res:Response, next:NextFunction) => {
-    const Op = Sequelize.Op; //? 시퀄라이즈 오퍼레이터
-    const { feedId, limit } = req.body;
-    //? 유효성 체크
-    if (!limit) return res.status(400).json({message: 'need accurate informaion'});
-    //? 조회 시작 점 설정
-    const lastFeed = await Feeds.max('id'); //? 새로고침 밑의 null 자리에 넣고 변수 하나로 줄여도 됨
-    const preFeed = feedId ? await Feeds.max('id', {where: {id: {[Op.lt]: feedId}}}).then(d => {
+    const Op = Sequelize.Op;
+
+    const { topicId, isMaxLike, limit, userId, feedId } = req.body;
+    if (!limit || !topicId) return res.status(400).json({message: 'need accurate informaion'});
+
+    const startFeedId = feedId ? await Feeds.max('id', {where: {id: {[Op.lt]: feedId}}}).then(d => {
       if (!d) return -1;
       return d;
-    }) : null; //? 계속탐색
+    }) : await Feeds.max('id'); //? 계속탐색
+    
+    if (startFeedId === - 1) return res.status(200).json({data: {userFeeds: []}, message: 'ok'});
+    
 
-    if (preFeed === - 1) return res.status(200).json({data: {userFeeds: []}, message: 'ok'});
+    let where: any = {id: {[Op.lte]: startFeedId}, topicId};
+    let order:any = [['id', 'DESC']];
 
-    //? 시작점 기준으로 조회 limit으로 조회 범위 설정
-    const feeds: any = await Feeds.findAll({order: [['id', 'DESC']], limit, 
-      where: {id: { [Op.lte]: preFeed || lastFeed}},
+    if (userId) {
+      where['userId'] = userId;
+    };
+
+    if (isMaxLike) {
+      order = [['likeNum', 'DESC']];
+    };
+
+    const temp: any = await Feeds.findAll({order: order, limit: limit, 
+      where: where,
       include: [
         {
           model: Users, 
@@ -88,66 +96,18 @@ const feedHandler = {
           as: 'topicsFeeds',
           attributes: ['word'] 
         },
-        {
-          model: Likes,
-          as: 'feedsLikes',
-          attributes: ['id']
-        },
-        {
-          model: Comments,
-          as: 'commentsFeedId',
-          attributes: ['id']
-        }
       ],
-    }).catch(e => {console.log('get feeds error')});
+      raw: true, attributes: ['id', 'content', 'likeNum', 'commentNum', 'createdAt', 'updatedAt']})
+      .catch(e => {console.log('get feeds error', e)});
 
-    if (!feeds) return res.status(200).json({message: 'feeds do not exists'})
+    const userFeeds = [];
+    for (let i = 0; i < temp.length; i += 1) {
+      const { id, content, likeNum, commentNum, createdAt, updatedAt } = temp[i];
+      const user = {userId: temp[i]['usersFeeds.id'], nickName: temp[i]['usersFeeds.nickName'], tag: temp[i]['usersFeeds.userIdTag.tagIdTag.id'] || null };
 
-    //? 형식대로 피드 한곳에 모으기
-    const userFeeds: {}[] = [];
-    for (let i = 0; i < feeds.length; i += 1) {
-      interface Feed {
-        feedId: number;
-        user: {userId: number, nickName: string | number, tag: number | null};
-        topic: string;
-        content: string;
-        likes: number;
-        comments: number;
-        createdAt: Date;
-        updatedAt: Date;
-      };
-
-      const { id, 
-        content, 
-        createdAt, 
-        updatedAt, 
-        topicsFeeds, 
-        usersFeeds, 
-        feedsLikes, 
-        commentsFeedId} = feeds[i].get();
-
-        let tag = null;
-        if (usersFeeds.userIdTag) {
-          const temp = usersFeeds.userIdTag.filter((a: Users_tags) => a.getDataValue('isUsed') === 1)[0];
-          if (temp) {
-            tag = temp.tagIdTag.id;
-          };
-        }
-
-        const feed: Feed = {
-          feedId: id,
-          user: {userId: usersFeeds.id, nickName: usersFeeds.nickName, tag},
-          topic: topicsFeeds.word,
-          content: JSON.parse(content),
-          likes: feedsLikes.length,
-          comments: commentsFeedId.length,
-          updatedAt,
-          createdAt
-        };
-
-        userFeeds.push(feed);
+      const rst = {feedId: id, user, topic: temp[i]['topicsFeeds.word'], content, likeNum, commentNum, createdAt, updatedAt};
+      userFeeds.push(rst);
     };
-    
     res.status(200).json({data: {userFeeds}, message: 'ok'});
   },
 

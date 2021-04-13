@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { Comments } from '../../models/comment';
 import { Comments_likes } from '../../models/comments_like';
+import { Feeds } from '../../models/feed';
 import { Users } from '../../models/user';
 
 const commentHandler = {
@@ -19,8 +20,12 @@ const commentHandler = {
       if (err) return res.status(401).json({message: 'invalid token'});
       const userId = decode.id;
       await Comments.create({comment, feedId, userId})
-      .then(d => {
-        res.status(201).json({message: "posted comment successfully"});
+      .then( async (d) => {
+        await Comments.count({where: {feedId}}).then( async (d) => {
+          await Feeds.update({commentNum: d}, {where: {id: feedId}}).then(d => {
+            res.status(201).json({message: "posted comment successfully"});
+          });
+        })
       })
       .catch(e => {
         console.log('comment upload error');
@@ -62,7 +67,7 @@ const commentHandler = {
   //? 코멘트 삭제 방식은 피드 삭제 방식과 같음.
   remove: (req: Request, res: Response, next: NextFunction) => {
     const { authorization } = req.headers;
-    const { commentId } = req.body;
+    const { commentId, feedId } = req.body;
 
     if (!authorization) return res.status(401).json({message: 'unauthorized'});
     if (!commentId) return res.status(400).json({message: 'need accurate informaion'});
@@ -72,9 +77,13 @@ const commentHandler = {
     jwt.verify(accessToken, accTokenSecret, async (err, decoded: any) => {
       if (err) return res.status(401).json({message: 'invalid token'});
       const userId = decoded.id;
-      await Comments.destroy({where: {id: commentId, userId}}).then(d => {
+      await Comments.destroy({where: {id: commentId, userId, feedId}}).then(async (d) => {
         if (d === 0) return res.status(404).json({message: 'commentId does not match with userId'});
-        res.status(200).json({message: `removed comment ${commentId} successfully`});
+        await Comments.count({where: {feedId}}).then( async (d) => {
+          await Feeds.update({commentNum: d}, {where: {id: feedId}}).then(d => {
+            res.status(200).json({message: `removed comment ${commentId} successfully`});
+          })
+        });
       }).catch(e => console.log('remove comment error'));
     });
   },
@@ -141,7 +150,7 @@ const commentHandler = {
       comments.push(cmt);
     };
 
-    res.status(200).json({data: comments, message: 'ok'});
+    res.status(200).json({data: {comments}, message: 'ok'});
   }
 }
 

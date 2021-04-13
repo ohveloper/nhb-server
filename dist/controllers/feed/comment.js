@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const comment_1 = require("../../models/comment");
 const comments_like_1 = require("../../models/comments_like");
+const feed_1 = require("../../models/feed");
 const user_1 = require("../../models/user");
 const commentHandler = {
     //? 코멘트 업로드
@@ -24,8 +25,12 @@ const commentHandler = {
                 return res.status(401).json({ message: 'invalid token' });
             const userId = decode.id;
             await comment_1.Comments.create({ comment, feedId, userId })
-                .then(d => {
-                res.status(201).json({ message: "posted comment successfully" });
+                .then(async (d) => {
+                await comment_1.Comments.count({ where: { feedId } }).then(async (d) => {
+                    await feed_1.Feeds.update({ commentNum: d }, { where: { id: feedId } }).then(d => {
+                        res.status(201).json({ message: "posted comment successfully" });
+                    });
+                });
             })
                 .catch(e => {
                 console.log('comment upload error');
@@ -72,7 +77,7 @@ const commentHandler = {
     //? 코멘트 삭제 방식은 피드 삭제 방식과 같음.
     remove: (req, res, next) => {
         const { authorization } = req.headers;
-        const { commentId } = req.body;
+        const { commentId, feedId } = req.body;
         if (!authorization)
             return res.status(401).json({ message: 'unauthorized' });
         if (!commentId)
@@ -83,10 +88,14 @@ const commentHandler = {
             if (err)
                 return res.status(401).json({ message: 'invalid token' });
             const userId = decoded.id;
-            await comment_1.Comments.destroy({ where: { id: commentId, userId } }).then(d => {
+            await comment_1.Comments.destroy({ where: { id: commentId, userId, feedId } }).then(async (d) => {
                 if (d === 0)
                     return res.status(404).json({ message: 'commentId does not match with userId' });
-                res.status(200).json({ message: `removed comment ${commentId} successfully` });
+                await comment_1.Comments.count({ where: { feedId } }).then(async (d) => {
+                    await feed_1.Feeds.update({ commentNum: d }, { where: { id: feedId } }).then(d => {
+                        res.status(200).json({ message: `removed comment ${commentId} successfully` });
+                    });
+                });
             }).catch(e => console.log('remove comment error'));
         });
     },
@@ -145,7 +154,7 @@ const commentHandler = {
             comments.push(cmt);
         }
         ;
-        res.status(200).json({ data: comments, message: 'ok' });
+        res.status(200).json({ data: { comments }, message: 'ok' });
     }
 };
 exports.default = commentHandler;
