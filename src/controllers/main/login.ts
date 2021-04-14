@@ -13,8 +13,10 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
   } else {
     //? 토큰 발급하는 함수
     const id = Number(userInfo.id);
+    const status = Number(userInfo.getDataValue('status'));
     const issueToken = (secret: string, expiresIn: string) => {
-      return jwt.sign({ id }, secret, { expiresIn });
+      if (status === 9) return jwt.sign({ id, status }, secret, { expiresIn: '1h' });
+      else return jwt.sign({ id }, secret, { expiresIn });
     };
 
     //? 코드 초기화 -> 토큰 발급 후 전송
@@ -24,6 +26,14 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
        const domain = process.env.CLIENT_DOMAIN || 'localhost';
        const accessToken = issueToken(accTokenSecret, '5h');
        const refreshToken = issueToken(refTokenSecret, '15d');
+       interface ResMessage {
+         data: {accessToken: string, isAdmin?: boolean};
+         message: string
+       }
+       let resMessage: ResMessage = {data: {accessToken: accessToken}, message: "log in successfully"}; 
+       if (status === 9) {
+         resMessage = {data: {accessToken: accessToken, isAdmin: true}, message: "admin accessed"};
+       }
     
        res.status(200)
        .cookie('refreshToken', refreshToken, {
@@ -33,12 +43,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
          secure: true,
          sameSite: 'none'
        })
-       .json({
-         "data": {
-           "aceesToken": accessToken, 
-         },
-         "message": "log in successfully"
-       })
+       .json(resMessage)
       }
     );
   }

@@ -33,7 +33,7 @@ const feedHandler = {
           if (!topic) {
             res.status(404).json({message: 'topic not fonud'});
           } else {
-            const topicId = topic.getDataValue('id');
+            const topicId: any = topic.getDataValue('id');
             await Feeds.create({ content: strContent, topicId, userId }).then(d => {
               res.status(201).json({message: 'uploaded'});
             });

@@ -19,6 +19,10 @@ Topics.init({
         type: sequelize_1.DataTypes.STRING,
         allowNull: false
     },
+    expiration: {
+        type: sequelize_1.DataTypes.DATE,
+        allowNull: false
+    }
 }, {
     modelName: 'Topics',
     tableName: 'topics',

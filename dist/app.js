@@ -16,6 +16,7 @@ const index_1 = __importDefault(require("./routers/index"));
 const feed_1 = __importDefault(require("./routers/feed"));
 const main_1 = __importDefault(require("./routers/main"));
 const user_1 = __importDefault(require("./routers/user"));
+const admin_1 = __importDefault(require("./routers/admin"));
 const blackList_1 = __importDefault(require("./serverFunc/blackList"));
 const port = 5000;
 const app = express_1.default();
@@ -34,6 +35,7 @@ app.use('/', index_1.default);
 app.use('/feed', feed_1.default);
 app.use('/user', user_1.default);
 app.use('/main', main_1.default);
+app.use('/admin', admin_1.default);
 //? black lists 자동으로 정리 해주는 함수
 blackList_1.default();
 let server;

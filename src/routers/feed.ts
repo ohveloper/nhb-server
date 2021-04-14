@@ -10,7 +10,8 @@ const {
   cmtLike,
   cmtRemove,
   cmtEdit,
-  cmtBring
+  cmtBring,
+  topicBring
 } = require('../controllers/feed');
 
 const router = Router();
@@ -28,5 +29,7 @@ router.post('/comment', cmtUpload);
 router.post('/comment/like', cmtLike);
 router.delete('/comment', cmtRemove);
 router.patch('/comment', cmtEdit);
+//? 토픽
+router.get('/topic', topicBring);
 
 export default router;

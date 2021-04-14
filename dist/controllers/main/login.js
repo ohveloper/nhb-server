@@ -17,8 +17,12 @@ const login = async (req, res, next) => {
     else {
         //? 토큰 발급하는 함수
         const id = Number(userInfo.id);
+        const status = Number(userInfo.getDataValue('status'));
         const issueToken = (secret, expiresIn) => {
-            return jsonwebtoken_1.default.sign({ id }, secret, { expiresIn });
+            if (status === 9)
+                return jsonwebtoken_1.default.sign({ id, status }, secret, { expiresIn: '1h' });
+            else
+                return jsonwebtoken_1.default.sign({ id }, secret, { expiresIn });
         };
         //? 코드 초기화 -> 토큰 발급 후 전송
         await user_1.Users.update({ authCode: null }, { where: { id } }).then(data => {
@@ -27,6 +31,10 @@ const login = async (req, res, next) => {
             const domain = process.env.CLIENT_DOMAIN || 'localhost';
             const accessToken = issueToken(accTokenSecret, '5h');
             const refreshToken = issueToken(refTokenSecret, '15d');
+            let resMessage = { data: { accessToken: accessToken }, message: "log in successfully" };
+            if (status === 9) {
+                resMessage = { data: { accessToken: accessToken, isAdmin: true }, message: "admin accessed" };
+            }
             res.status(200)
                 .cookie('refreshToken', refreshToken, {
                 domain,
@@ -35,12 +43,7 @@ const login = async (req, res, next) => {
                 secure: true,
                 sameSite: 'none'
             })
-                .json({
-                "data": {
-                    "aceesToken": accessToken,
-                },
-                "message": "log in successfully"
-            });
+                .json(resMessage);
         });
     }
 };

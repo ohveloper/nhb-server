@@ -1,7 +1,8 @@
 import feedHandler from './feed';
 import likeHandler from './like';
 import rank from './rank';
-import commentHandler from './comment'
+import commentHandler from './comment';
+import topicBring from './topic';
 
 module.exports = {
   upload: feedHandler.upload,
@@ -14,5 +15,6 @@ module.exports = {
   cmtLike: commentHandler.like,
   cmtRemove: commentHandler.remove,
   cmtEdit: commentHandler.edit,
-  cmtBring: commentHandler.bring
+  cmtBring: commentHandler.bring,
+  topicBring
 }

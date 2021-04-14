@@ -11,6 +11,7 @@ import indexRouter from './routers/index';
 import feedRouter from './routers/feed';
 import mainRouter from './routers/main';
 import userRouter from './routers/user';
+import adminRouter from './routers/admin';
 import blackListsHandler from './serverFunc/blackList';
 
 const port: number = 5000;
@@ -36,6 +37,7 @@ app.use(cors(
   app.use('/feed', feedRouter);
   app.use('/user', userRouter);
   app.use('/main', mainRouter);
+  app.use('/admin', adminRouter);
   //? black lists 자동으로 정리 해주는 함수
   blackListsHandler();
 

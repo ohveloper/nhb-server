@@ -7,6 +7,7 @@ const feed_1 = __importDefault(require("./feed"));
 const like_1 = __importDefault(require("./like"));
 const rank_1 = __importDefault(require("./rank"));
 const comment_1 = __importDefault(require("./comment"));
+const topic_1 = __importDefault(require("./topic"));
 module.exports = {
     upload: feed_1.default.upload,
     bring: feed_1.default.bring,
@@ -18,5 +19,6 @@ module.exports = {
     cmtLike: comment_1.default.like,
     cmtRemove: comment_1.default.remove,
     cmtEdit: comment_1.default.edit,
-    cmtBring: comment_1.default.bring
+    cmtBring: comment_1.default.bring,
+    topicBring: topic_1.default
 };
