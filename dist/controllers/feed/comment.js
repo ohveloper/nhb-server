@@ -88,12 +88,18 @@ const commentHandler = {
             if (err)
                 return res.status(401).json({ message: 'invalid token' });
             const userId = decoded.id;
-            await comment_1.Comments.destroy({ where: { id: commentId, userId, feedId } }).then(async (d) => {
+            let where = { id: commentId, userId, feedId };
+            let message = `removed comment ${commentId} successfully`;
+            if (decoded.status === 9) {
+                where = { id: commentId, feedId };
+                message = 'admin: ' + message;
+            }
+            await comment_1.Comments.destroy({ where }).then(async (d) => {
                 if (d === 0)
                     return res.status(404).json({ message: 'commentId does not match with userId' });
                 await comment_1.Comments.count({ where: { feedId } }).then(async (d) => {
                     await feed_1.Feeds.update({ commentNum: d }, { where: { id: feedId } }).then(d => {
-                        res.status(200).json({ message: `removed comment ${commentId} successfully` });
+                        res.status(200).json({ message });
                     });
                 });
             }).catch(e => console.log('remove comment error'));
@@ -113,11 +119,17 @@ const commentHandler = {
             if (err)
                 return res.status(401).json({ message: 'invalid token' });
             const userId = decoded.id;
-            await comment_1.Comments.update({ comment }, { where: { id: commentId, userId } })
+            let where = { id: commentId, userId };
+            let message = `edited coment ${commentId} succeessfully`;
+            if (decoded.status === 9) {
+                where = { id: commentId };
+                message = 'admin: ' + message;
+            }
+            await comment_1.Comments.update({ comment }, { where })
                 .then(d => {
                 if (d[0] === 0)
                     return res.status(404).json({ message: 'commentId does not match with userId' });
-                res.status(200).json({ message: `edited coment ${commentId} succeessfully` });
+                res.status(200).json({ message });
             })
                 .catch(e => console.log('edit comment error'));
         });
