@@ -9,7 +9,9 @@ import { Users_tags } from '../../models/users_tag';
 const liveRank = async (req: Request, res: Response, next: NextFunction) => {
   const Op = Sequelize.Op;
   const now = new Date()
+  //? 15분전 시간 구하기
   const searchDate = new Date(now.setMinutes(now.getMinutes() - 15));
+  //? 15 분 동안의 모든 Like 정보 수집
   const temp: any = await Likes.findAll({where: {createdAt: {[Op.gte]: searchDate}}, include: [
     {
       model: Feeds,
@@ -25,8 +27,10 @@ const liveRank = async (req: Request, res: Response, next: NextFunction) => {
     }
   ], attributes: ['feedId'], group: ['feedId'],  order: [[Sequelize.literal("`feedsLikes.likeCount`"), 'DESC']]});
 
+  //? 정보가 부족할 때 응답
   if (temp.length < 3) return res.status(400).json({message: 'not enough data'});
 
+  //? 만약 정보가 있다면 아래처럼 정리하여 전송
   const rankTemp: any = {};
   for (let i = 0; i < temp.length; i += 1) {
     const userId: number = temp[i].feedsLikes.usersFeeds.id;
