@@ -41,7 +41,7 @@ const signUp = async (req, res, next) => {
             })
                 .json({
                 "data": {
-                    "aceesToken": accessToken,
+                    "accessToken": accessToken,
                     "email": email,
                     "nickName": nickName
                 },
