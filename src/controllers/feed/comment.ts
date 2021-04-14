@@ -76,12 +76,20 @@ const commentHandler = {
     const accTokenSecret = process.env.ACCTOKEN_SECRET || 'acctest';
     jwt.verify(accessToken, accTokenSecret, async (err, decoded: any) => {
       if (err) return res.status(401).json({message: 'invalid token'});
+
       const userId = decoded.id;
-      await Comments.destroy({where: {id: commentId, userId, feedId}}).then(async (d) => {
+
+      let where: {id: number, userId?: number, feedId: number} = {id: commentId, userId, feedId};
+      let message: string = `removed comment ${commentId} successfully`
+      if (decoded.status === 9) {
+        where = {id: commentId, feedId};
+        message = 'admin: ' + message;
+      }
+      await Comments.destroy({where}).then(async (d) => {
         if (d === 0) return res.status(404).json({message: 'commentId does not match with userId'});
         await Comments.count({where: {feedId}}).then( async (d) => {
           await Feeds.update({commentNum: d}, {where: {id: feedId}}).then(d => {
-            res.status(200).json({message: `removed comment ${commentId} successfully`});
+            res.status(200).json({message});
           })
         });
       }).catch(e => console.log('remove comment error'));
@@ -99,11 +107,20 @@ const commentHandler = {
     const accTokenSecret = process.env.ACCTOKEN_SECRET || 'acctest';
     jwt.verify(accessToken, accTokenSecret, async (err, decoded: any) => {
       if (err) return res.status(401).json({message: 'invalid token'});
-      const userId = decoded.id
-      await Comments.update({comment}, {where: {id: commentId, userId}})
+
+      const userId = decoded.id;
+
+      let where: {id: number, userId?: number} = {id: commentId, userId};
+      let message: string = `edited coment ${commentId} succeessfully`
+      if (decoded.status === 9) {
+        where = {id: commentId};
+        message = 'admin: ' + message;
+      }
+
+      await Comments.update({comment}, {where})
       .then(d => {
         if(d[0] === 0) return res.status(404).json({message: 'commentId does not match with userId'})
-        res.status(200).json({message: `edited coment ${commentId} succeessfully`});
+        res.status(200).json({message});
       })
       .catch(e => console.log('edit comment error'));
     });

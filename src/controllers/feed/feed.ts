@@ -142,10 +142,17 @@ const feedHandler = {
       };
 
       const userId = decoded.id;
+      //? admin 처리
+      let where: {id: number, userId?: number} = {id: feedId, userId};
+      let message: string = `feed ${feedId} was removed`
+      if (decoded.status === 9) {
+        where = {id: feedId};
+        message = 'admin: ' + message;
+      }
       //? 모든 유효성 검사를 통과 후 삭제
-      await Feeds.destroy({where: {id: feedId, userId}}).then(d => {
+      await Feeds.destroy({where}).then(d => {
         if (d === 0) return res.status(404).json({message: 'feedId does not match with userId'});
-        res.status(200).json({message: `feed ${feedId} was removed`});
+        res.status(200).json({message});
       })
       .catch(e => {
         console.log('delete feed error');
@@ -171,9 +178,15 @@ const feedHandler = {
       if (err) return res.status(401).json({message: 'invalid token'});
       const userId = decoded.id;
       //? 모든 유효성 검사 후 수정.
-      await Feeds.update({content: JSON.stringify(content)}, {where: {userId, id: feedId}}).then(d => {
+      let where: {id: number, userId?: number} = {id: feedId, userId};
+      let message: string = `feed ${feedId} edited successfully`
+      if (decoded.status === 9) {
+        where = {id: feedId};
+        message = 'admin: ' + message;
+      }
+      await Feeds.update({content: JSON.stringify(content)}, {where}).then(d => {
         if (d[0] === 0) return res.status(404).json({message: 'feedId does not match with userId'});
-        res.status(200).json({message: `feed ${feedId} edited successfully`});
+        res.status(200).json({message});
       }).catch(e => {
         console.log('edit feed error');
       });
