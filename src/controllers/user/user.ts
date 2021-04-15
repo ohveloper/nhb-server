@@ -37,7 +37,7 @@ const userHandler = {
           }
         ]
       }).then(d => {
-        if (!d) return res.status(404).json({message: 'not found user'});
+        if (!d) return res.status(404).json({message: 'The user is not found'});
         else return d;
       });
 
@@ -63,16 +63,16 @@ const userHandler = {
     };
 
 
-    if (!authorization && !userId) return res.status(401).json({message: 'unauthorized'});
+    if (!authorization && !userId) return res.status(401).json({message: 'Unauthorized'});
     let userInfo: {} = {};
     if (userId) {
       userInfo = await userInfoFunc(userId);
-      res.status(200).json({data: userInfo, message: `user ${userId} info`});
+      res.status(200).json({data: userInfo, message: `User ${userId} info`});
     } else if (authorization) {
       const accessToken = authorization.split(' ')[1];
       const accTokenSecret = process.env.ACCTOKEN_SECRET || 'acctest';
       jwt.verify(accessToken, accTokenSecret, async (err, decoded: any) => {
-        if (err) return res.status(401).json({message: "invalid token"});
+        if (err) return res.status(401).json({message: "Invalid token"});
         userInfo = await userInfoFunc(decoded.id);
         res.status(200).json({data: userInfo, message: 'cur user info'});
       });
@@ -82,28 +82,28 @@ const userHandler = {
   edit: (req: Request, res: Response, next: NextFunction) => {
     const { authorization } = req.headers;
     const { avatarUrl, nickName, introduction } = req.body;
-    if (!authorization) return res.status(401).json({message: 'unauthoriazed'});
-    if (!avatarUrl || !nickName || !introduction) return res.status(400).json({message: 'need accurate informations'});
+    if (!authorization) return res.status(401).json({message: 'Unauthoriazed'});
+    if (!avatarUrl || !nickName || !introduction) return res.status(400).json({message: 'Need accurate informations'});
 
     const accessToken = authorization.split(' ')[1];
     const accTokenSecret = process.env.ACCTOKEN_SECRET || 'acctest';
      jwt.verify(accessToken, accTokenSecret, async (err, decoded: any) => {
-       if (err) return res.status(400).json({message: 'invalid token'});
+       if (err) return res.status(400).json({message: 'Invalid token'});
        await Users.update({ avatarUrl, nickName, introduction }, { where: {id: decoded.id} }).then(d => {
-         res.status(200).json({edittedInfo: { nickName, introduction, avatarUrl },message: 'edit successfully'});
+         res.status(200).json({edittedInfo: { nickName, introduction, avatarUrl },message: 'Userinfo was edited'});
        });
      });
   },
 
   withdrawal: (req: Request, res: Response, next: NextFunction) => {
     const { authorization } = req.headers;
-    if (!authorization) return res.status(401).json({message: 'unauthoriazed'});
+    if (!authorization) return res.status(401).json({message: 'Unauthoriazed'});
 
     const accessToken = authorization.split(' ')[1];
     const accTokenSecret = process.env.ACCTOKEN_SECRET || 'acctest';
     jwt.verify(accessToken, accTokenSecret, async (err, decoded: any) => {
-      if (err) return res.status(400).json({message: 'invalid token'});
-      await Users.destroy({where: {id: decoded.id}}).then(d => res.status(200).json({message: 'removed user in db'}));
+      if (err) return res.status(400).json({message: 'Invalid token'});
+      await Users.destroy({where: {id: decoded.id}}).then(d => res.status(200).json({message: 'The user was removed in db'}));
     });
   }
 };

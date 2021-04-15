@@ -13,20 +13,20 @@ const topicHandler = {
     upload: async (req, res, next) => {
         let { word, expiration } = req.body;
         if (!word || !expiration)
-            return res.status(400).json({ message: 'need accurate information' });
+            return res.status(400).json({ message: 'Need accurate informations' });
         const isExist = await topic_1.Topics.findOne({ where: { word } }).then(d => d === null ? false : true);
         //? 이미 존재하는 단어일 때
         if (isExist)
-            return res.status(400).json({ message: 'word already exists' });
+            return res.status(400).json({ message: 'The word already exists' });
         if (expiration) {
             expiration = new Date(new Date(expiration).setHours(new Date(expiration).getHours() - 9));
             const isDupDate = await topic_1.Topics.findOne({ where: { expiration } }).then(d => d === null ? false : true);
             //? 이미 존재하는 만료 날짜일 때
             if (isDupDate)
-                return res.status(400).json({ message: 'expiration already exists' });
+                return res.status(400).json({ message: 'The expiration date already exists' });
             //? 모든 유효성 검사 후 생성
             await topic_1.Topics.create({ word, expiration }).then(d => {
-                return res.status(201).json({ message: 'admin: topic uploaded' });
+                return res.status(201).json({ message: 'Admin: Topic was uploaded' });
             });
         }
     },
@@ -38,13 +38,13 @@ const topicHandler = {
         }).then(d => {
             //? 토픽이 하나도 없을 때
             if (d.length === 0)
-                return res.status(400).json({ message: 'there are no topics' });
+                return res.status(400).json({ message: 'There are no topics' });
             //? 만료날 짜 순으로 정렬
             const topics = d.map(a => {
                 a.expiration = new Date(new Date(a.expiration).setHours(new Date(a.expiration).getHours() + 9));
                 return a;
             });
-            res.status(200).send({ data: { topics }, message: 'admin: all topics' });
+            res.status(200).send({ data: { topics }, message: 'Admin: all topics' });
         });
     },
     //? 토픽 수정
@@ -53,20 +53,20 @@ const topicHandler = {
         const standardDate = new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().substr(0, 10);
         const { word, topicId } = req.body;
         if (!word || !topicId)
-            return res.status(400).json({ message: 'need accurate information' });
+            return res.status(400).json({ message: 'Need accurate informations' });
         const isExist = await topic_1.Topics.findOne({ where: { word } }).then(d => d ? true : false);
         if (isExist)
-            return res.status(400).json({ message: 'word already exists' });
+            return res.status(400).json({ message: 'The word already exists' });
         //? 이미 만료되거나 지금 사용중인 단어일 때
         const isExpired = await topic_1.Topics.findOne({ where: { id: topicId, expiration: { [Op.lte]: standardDate } } }).then(d => d ? true : false);
         if (isExpired)
-            return res.status(400).json({ message: 'expired or current topic can not be editted' });
+            return res.status(400).json({ message: 'Expired or current topic can not be edited' });
         //? 모든 유효성 검사 후 업데이트
         await topic_1.Topics.update({ word }, { where: { id: topicId } }).then(d => {
             if (d[0] === 0)
-                return res.status(400).json({ message: 'id does not exists' });
+                return res.status(400).json({ message: 'ID does not exists' });
             else
-                return res.status(200).json({ message: 'admin: topic is editted successfully' });
+                return res.status(200).json({ message: 'Admin: The Topic was edited successfully' });
         });
     }
 };

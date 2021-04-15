@@ -12,12 +12,12 @@ const topicBring = async (req: Request, res: Response, next: NextFunction) => {
     order: [['expiration', 'DESC']],
     attributes: ['id', 'word', 'expiration']
   }).then(d => {
-    if (d.length === 0) return res.status(400).json({message: 'there are no topics'});
+    if (d.length === 0) return res.status(400).json({message: 'There are no topics'});
     const topics = d.map(a => {
       a.expiration = new Date(new Date(a.expiration).setHours(new Date(a.expiration).getHours() + 9));
       return a;
     });
-    res.status(200).send({data: {topics}, message: 'ok'});
+    res.status(200).send({data: {topics}, message: 'Topics'});
   });
 };
 

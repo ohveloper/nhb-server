@@ -17,12 +17,12 @@ const likeHandler = (req, res, next) => {
         const accTokenSecret = process.env.ACCTOKEN_SECRET || 'acctest';
         jsonwebtoken_1.default.verify(accessToken, accTokenSecret, async (err, decoded) => {
             if (err) {
-                res.status(401).json({ message: 'invalid acctoken' }); //? 토큰 만료
+                res.status(401).json({ message: 'Invalid token' }); //? 토큰 만료
             }
             else {
                 const { feedId } = req.body;
                 if (!feedId)
-                    return res.status(400).json({ message: 'need accurate informaion' });
+                    return res.status(400).json({ message: 'Need accurate informaions' });
                 const userId = decoded.id;
                 //? 먼저 해당 유저가 해당 피드에대해 좋아요를 누른적이 있는지 찾는다.
                 const isLiked = await like_1.Likes.findOne({ where: { feedId, userId } }).then(d => {
@@ -35,13 +35,13 @@ const likeHandler = (req, res, next) => {
                 let message = '';
                 if (isLiked) {
                     await like_1.Likes.destroy({ where: { feedId, userId } }).then(d => {
-                        message = 'dislike';
+                        message = 'Dislike';
                     });
                     //? 없다면 데이터 베이스 생성
                 }
                 else {
                     await like_1.Likes.create({ feedId, userId }).then(d => {
-                        message = 'like';
+                        message = 'Like';
                     });
                 }
                 await like_1.Likes.count({ where: { feedId } }).then(async (d) => {

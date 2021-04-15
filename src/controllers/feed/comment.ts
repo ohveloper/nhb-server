@@ -10,20 +10,20 @@ const commentHandler = {
   upload: (req: Request, res: Response, next: NextFunction) => {
     const { authorization } = req.headers;
     const { feedId, comment } = req.body;
-    if (!authorization) return res.status(401).json({message: 'unauthorized'});
-    if (!feedId || !comment) return res.status(400).json({message: 'need accurate informaion'});
+    if (!authorization) return res.status(401).json({message: 'Unauthorized'});
+    if (!feedId || !comment) return res.status(400).json({message: 'Need accurate informaions'});
 
     const accessToken = authorization.split(' ')[1];
     const accTokenSecret = process.env.ACCTOKEN_SECRET || 'acctest';
     //? 유효성 검사 후 업로드
     jwt.verify(accessToken, accTokenSecret, async (err, decode: any) => {
-      if (err) return res.status(401).json({message: 'invalid token'});
+      if (err) return res.status(401).json({message: 'Invalid token'});
       const userId = decode.id;
       await Comments.create({comment, feedId, userId})
       .then( async (d) => {
         await Comments.count({where: {feedId}}).then( async (d) => {
           await Feeds.update({commentNum: d}, {where: {id: feedId}}).then(d => {
-            res.status(201).json({message: "posted comment successfully"});
+            res.status(201).json({message: "The comment was uploaded"});
           });
         })
       })
@@ -36,16 +36,16 @@ const commentHandler = {
   like: (req: Request, res: Response, next: NextFunction) => {
     const { authorization } = req.headers;
     const { commentId } = req.body;
-    if (!authorization) return res.status(401).json({message: 'unauthorized'});
-    if (!commentId) return res.status(400).json({message: 'need accurate informaion'});
+    if (!authorization) return res.status(401).json({message: 'Unauthorized'});
+    if (!commentId) return res.status(400).json({message: 'Need accurate informaions'});
 
     const accessToken = authorization.split(' ')[1];
     const accTokenSecret = process.env.ACCTOKEN_SECRET || 'acctest';
     jwt.verify(accessToken, accTokenSecret, async (err, decoded: any) => {
-      if (err) return res.status(401).json({message: 'invalid token'});
+      if (err) return res.status(401).json({message: 'Invalid token'});
       const userId = decoded.id;
       await Comments.findOne({where: {id: commentId}}).then((d:any) => {
-        if (!d) return res.status(404).json({message: 'comment does not exist'})
+        if (!d) return res.status(404).json({message: 'The comment does not exist'})
       });
       const isLike = await Comments_likes.findOne({where:{commentId, userId}}).then(d => {
         if (d) return true;
@@ -54,11 +54,11 @@ const commentHandler = {
 
       if (isLike) {
         await Comments_likes.destroy({where: {commentId, userId}}).then(d => {
-          res.status(200).json({messasge: 'comment dislike'});
+          res.status(200).json({messasge: 'Comment dislike'});
         }).catch(d => console.log('comment dislike error'));
       } else {
         await Comments_likes.create({commentId, userId}).then(d => {
-          res.status(201).json({message: 'comment like'});
+          res.status(201).json({message: 'Comment like'});
         }).catch(d => console.log('comment like error'));
       };
     });
@@ -69,24 +69,24 @@ const commentHandler = {
     const { authorization } = req.headers;
     const { commentId, feedId } = req.body;
 
-    if (!authorization) return res.status(401).json({message: 'unauthorized'});
-    if (!commentId) return res.status(400).json({message: 'need accurate informaion'});
+    if (!authorization) return res.status(401).json({message: 'Unauthorized'});
+    if (!commentId) return res.status(400).json({message: 'Need accurate informaions'});
 
     const accessToken = authorization.split(' ')[1];
     const accTokenSecret = process.env.ACCTOKEN_SECRET || 'acctest';
     jwt.verify(accessToken, accTokenSecret, async (err, decoded: any) => {
-      if (err) return res.status(401).json({message: 'invalid token'});
+      if (err) return res.status(401).json({message: 'Invalid token'});
 
       const userId = decoded.id;
 
       let where: {id: number, userId?: number, feedId: number} = {id: commentId, userId, feedId};
-      let message: string = `removed comment ${commentId} successfully`
+      let message: string = `The comment ${commentId} was removed`
       if (decoded.status === 9) {
         where = {id: commentId, feedId};
         message = 'admin: ' + message;
       }
       await Comments.destroy({where}).then(async (d) => {
-        if (d === 0) return res.status(404).json({message: 'commentId does not match with userId'});
+        if (d === 0) return res.status(404).json({message: 'The commentId does not match with userId'});
         await Comments.count({where: {feedId}}).then( async (d) => {
           await Feeds.update({commentNum: d}, {where: {id: feedId}}).then(d => {
             res.status(200).json({message});
@@ -100,18 +100,18 @@ const commentHandler = {
     const { authorization } = req.headers;
     const { comment, commentId } = req.body;
 
-    if (!authorization) return res.status(401).json({message: 'unauthorized'});
-    if (!commentId || !comment) return res.status(400).json({message: 'need accurate informaion'});
+    if (!authorization) return res.status(401).json({message: 'Unauthorized'});
+    if (!commentId || !comment) return res.status(400).json({message: 'Need accurate informaions'});
     
     const accessToken = authorization.split(' ')[1];
     const accTokenSecret = process.env.ACCTOKEN_SECRET || 'acctest';
     jwt.verify(accessToken, accTokenSecret, async (err, decoded: any) => {
-      if (err) return res.status(401).json({message: 'invalid token'});
+      if (err) return res.status(401).json({message: 'Invalid token'});
 
       const userId = decoded.id;
 
       let where: {id: number, userId?: number} = {id: commentId, userId};
-      let message: string = `edited coment ${commentId} succeessfully`
+      let message: string = `The coment ${commentId} was edited`
       if (decoded.status === 9) {
         where = {id: commentId};
         message = 'admin: ' + message;
@@ -119,7 +119,7 @@ const commentHandler = {
 
       await Comments.update({comment}, {where})
       .then(d => {
-        if(d[0] === 0) return res.status(404).json({message: 'commentId does not match with userId'})
+        if(d[0] === 0) return res.status(404).json({message: 'The commentId does not match with userId'})
         res.status(200).json({message});
       })
       .catch(e => console.log('edit comment error'));
@@ -129,7 +129,7 @@ const commentHandler = {
   //? 피드 아이디에 따른 코멘트 조회. 피드 조회와 같은 알고리즘
   bring: async (req: Request, res: Response, next: NextFunction) => {
     const { feedId } = req.body;
-    if (!feedId) return res.status(400).json({message: 'need accurate informaion'});
+    if (!feedId) return res.status(400).json({message: 'Need accurate informaions'});
     const data: any = await Comments.findAll({
       where: {feedId},
       include: [
@@ -169,7 +169,7 @@ const commentHandler = {
       comments.push(cmt);
     };
 
-    res.status(200).json({data: {comments}, message: 'ok'});
+    res.status(200).json({data: {comments}, message: `Feed ${feedId}\`s comment` });
   }
 }
 
