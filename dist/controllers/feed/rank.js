@@ -38,7 +38,7 @@ const rank = async (req, res, next) => {
                 return 0;
         }
         else {
-            console.log('something wrong in rank system 38');
+            console.log('something wrong in rank system');
         }
         ;
     });
@@ -65,11 +65,11 @@ const rank = async (req, res, next) => {
             rank.push(tempRank);
         }
         else {
-            console.log('something wrong in rank system 63');
+            console.log('something wrong in rank system');
         }
         ;
     }
     ;
-    res.status(200).json({ data: rank, message: 'ok' });
+    res.status(200).json({ data: rank, message: 'Rank 1 to 10' });
 };
 exports.default = rank;

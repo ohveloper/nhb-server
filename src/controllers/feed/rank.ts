@@ -35,7 +35,7 @@ const rank = async (req: Request, res: Response, next: NextFunction) => {
       else if (el1 < el2) return 1;
       else return 0
     } else {
-      console.log('something wrong in rank system 38');
+      console.log('something wrong in rank system');
     };
   });
   //? 원하는 만큼 슬라이싱 두번째 인자를 변수로 두고 
@@ -67,11 +67,11 @@ const rank = async (req: Request, res: Response, next: NextFunction) => {
       const tempRank: Rankinfo = {userId: id, nickName, likeNum: usersLikes?.length, tag};
       rank.push(tempRank);
     } else {
-      console.log('something wrong in rank system 63');
+      console.log('something wrong in rank system');
     };
   };
 
-  res.status(200).json({data: rank, message: 'ok'});
+  res.status(200).json({data: rank, message: 'Rank 1 to 10'});
 };
 
 export default rank;

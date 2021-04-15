@@ -10,7 +10,7 @@ dotenv_1.default.config();
 const adminCheck = async (req, res, next) => {
     const { authorization } = req.headers;
     if (!authorization)
-        return res.status(401).json({ message: 'unauthorized' });
+        return res.status(401).json({ message: 'Unauthorized' });
     const accessToken = authorization.split(' ')[1];
     const accTokenSecret = process.env.ACCTOKEN_SECRET || 'acctest';
     //? 어드민 status 9 체크
@@ -21,7 +21,7 @@ const adminCheck = async (req, res, next) => {
     });
     //? 어드민 아니라면 요청 거부
     if (!isAdmin)
-        return res.status(401).json({ message: 'rejected request' });
+        return res.status(401).json({ message: 'Request was rejected' });
     else
         return next(); //? 맞다면 함수를 이용하여 다음 작업 실행.
 };

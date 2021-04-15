@@ -12,7 +12,7 @@ const login = async (req, res, next) => {
     const userInfo = await user_1.Users.findOne({ where: { authCode } });
     //? authCode가 없다면 만료된 것이므로 다시 로그인 인증 진행
     if (!userInfo) {
-        res.status(404).json({ "message": "expired authCode" });
+        res.status(401).json({ "message": "Expired authcode" });
     }
     else {
         //? 토큰 발급하는 함수
@@ -31,9 +31,9 @@ const login = async (req, res, next) => {
             const domain = process.env.CLIENT_DOMAIN || 'localhost';
             const accessToken = issueToken(accTokenSecret, '5h');
             const refreshToken = issueToken(refTokenSecret, '15d');
-            let resMessage = { data: { accessToken: accessToken }, message: "log in successfully" };
+            let resMessage = { data: { accessToken: accessToken }, message: "Login" };
             if (status === 9) {
-                resMessage = { data: { accessToken: accessToken, isAdmin: true }, message: "admin accessed" };
+                resMessage = { data: { accessToken: accessToken, isAdmin: true }, message: "Admin accessed" };
             }
             res.status(200)
                 .cookie('refreshToken', refreshToken, {

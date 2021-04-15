@@ -9,7 +9,7 @@ const refreshToken = async (req: Request, res: Response, next: NextFunction) => 
   const { refreshToken } = req.cookies;
   //? 헤더 내 쿠키에 리프레시 토큰이 없을 때
   if (!refreshToken) {
-    res.status(401).json({message: "unauthorized"});
+    res.status(401).json({message: "Unauthorized"});
   } else {
     //? 있을 때 디코딩
     const isBlocked = await BlackLists.findOne({where:{refreshToken}}).then(d => {
@@ -17,21 +17,21 @@ const refreshToken = async (req: Request, res: Response, next: NextFunction) => 
       else return false;
     });
 
-    if (isBlocked) return res.status(401).json({message: 'blocked reftoken'});
+    if (isBlocked) return res.status(401).json({message: 'Blocked reftoken'});
     
     const refTokenSecret = process.env.REFTOKEN_SECRET || 'reftest';
     await jwt.verify(refreshToken, refTokenSecret, async (err: any, decoded: any) => {
       //? 토큰이 만료 되었을 때
       if (err) {
-        res.status(401).json({messsage: "invalid reftoken"});
+        res.status(401).json({messsage: "Invalid token"});
       } else {
         //? 토큰이 만료되지 않았을 때 액세스 토큰 재발급
         const userInfo = await Users.findOne({where: {id: decoded.id}});
         if (!userInfo) {
-          res.status(404).json({message: "user not found"});
+          res.status(404).json({message: "User is not found"});
         } else {
           const accessToken = await jwt.sign({id: userInfo.id}, refTokenSecret, { expiresIn: '5h'});
-          res.status(200).json({"data": {"accessToken": accessToken}, "message": "issued new accesstoken"});
+          res.status(200).json({"data": {"accessToken": accessToken}, "message": "New accesstoken is issued"});
         }
       }
     })

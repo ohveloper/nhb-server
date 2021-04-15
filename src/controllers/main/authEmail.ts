@@ -12,7 +12,7 @@ const authEmail = async (req:Request, res:Response, next:NextFunction) => {
   const { email } = req.body;
   const vaildCheck = email.indexOf('@');
   if (!email || email.length === 0 || vaildCheck === -1) {
-    return res.status(400).json({message: 'need accurate information'})
+    return res.status(400).json({message: 'Need accurate informations'})
   };
 
   //? 랜덤 코드 생성 겹칠일이 없을거란 생각. 만약 겹친다면 memoization으로 검사.

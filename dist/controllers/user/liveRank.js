@@ -31,7 +31,7 @@ const liveRank = async (req, res, next) => {
         ], attributes: ['feedId'], group: ['feedId'], order: [[sequelize_1.default.literal("`feedsLikes.likeCount`"), 'DESC']] });
     //? 정보가 부족할 때 응답
     if (temp.length < 3)
-        return res.status(400).json({ message: 'not enough data' });
+        return res.status(400).json({ message: 'Not enough data' });
     //? 만약 정보가 있다면 아래처럼 정리하여 전송
     const rankTemp = {};
     for (let i = 0; i < temp.length; i += 1) {
@@ -87,6 +87,6 @@ const liveRank = async (req, res, next) => {
     }
     ;
     liveRank.sort((a, b) => b.likeNum - a.likeNum);
-    res.status(200).json({ data: { liveRank }, message: 'ok' });
+    res.status(200).json({ data: { liveRank }, message: 'Ok' });
 };
 exports.default = liveRank;
