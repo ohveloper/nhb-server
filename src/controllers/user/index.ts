@@ -1,6 +1,7 @@
 import userHandler from './user';
 import liveRank from './liveRank';
-import userActHandler from './userActivity'
+import userActHandler from './userActivity';
+import tag from './tag';
 
 module.exports = {
   bring: userHandler.bring,
@@ -9,5 +10,6 @@ module.exports = {
   liveRank,
   like: userActHandler.like,
   comment: userActHandler.comment,
-  cmtLike: userActHandler.cmtLike
+  cmtLike: userActHandler.cmtLike,
+  tag
 };

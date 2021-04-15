@@ -16,6 +16,10 @@ Tags.init({
     description: {
         type: sequelize_1.DataTypes.STRING,
         allowNull: true
+    },
+    tagUrl: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: true
     }
 }, {
     modelName: 'Tags',
