@@ -29,13 +29,19 @@ const feedHandler = {
           }
           const strContent = JSON.stringify(content);
           const userId = decoded.id;
+
+          const status: number = await Users.findOne({where:{id: userId}, attributes: ['status']}).then(d => {
+            return Number(d?.getDataValue('status'));
+          });
+          if (status === 3) return res.status(400).json({message: "Banned user"});
+    
           const topic = await Topics.findOne({where: { word }});
           if (!topic) {
             res.status(404).json({message: 'The topic is not fonud'});
           } else {
             const topicId: any = topic.getDataValue('id');
             await Feeds.create({ content: strContent, topicId, userId }).then(d => {
-              res.status(201).json({message: 'The feed was uploaded'});
+              res.status(201).json({message: 'The feed is uploaded'});
             });
           }
         }
@@ -142,10 +148,16 @@ const feedHandler = {
       };
 
       const userId = decoded.id;
+
+      const status: number = await Users.findOne({where:{id: userId}, attributes: ['status']}).then(d => {
+        return Number(d?.getDataValue('status'));
+      });
+      if (status === 3) return res.status(400).json({message: "Banned user"});
+
       //? admin 처리
       let where: {id: number, userId?: number} = {id: feedId, userId};
-      let message: string = `The feed ${feedId} was removed`
-      if (decoded.status === 9) {
+      let message: string = `The feed ${feedId} is removed`;
+      if (status === 9) {
         where = {id: feedId};
         message = 'admin: ' + message;
       }
@@ -178,9 +190,14 @@ const feedHandler = {
       if (err) return res.status(401).json({message: 'Invalid token'});
       const userId = decoded.id;
       //? 모든 유효성 검사 후 수정.
+      const status: number = await Users.findOne({where:{id: userId}, attributes: ['status']}).then(d => {
+        return Number(d?.getDataValue('status'));
+      });
+      if (status === 3) return res.status(400).json({message: "Banned user"});
+
       let where: {id: number, userId?: number} = {id: feedId, userId};
-      let message: string = `The feed ${feedId} was edited`
-      if (decoded.status === 9) {
+      let message: string = `The feed ${feedId} is edited`;
+      if (status === 9) {
         where = {id: feedId};
         message = 'admin: ' + message;
       }

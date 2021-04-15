@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const feed_1 = require("../../models/feed");
 const like_1 = require("../../models/like");
+const user_1 = require("../../models/user");
 //? 좋아요와 좋아요 취소 구현
 const likeHandler = (req, res, next) => {
     const { authorization } = req.headers; //? 토큰확인
@@ -24,6 +25,11 @@ const likeHandler = (req, res, next) => {
                 if (!feedId)
                     return res.status(400).json({ message: 'Need accurate informaions' });
                 const userId = decoded.id;
+                const status = await user_1.Users.findOne({ where: { id: userId }, attributes: ['status'] }).then(d => {
+                    return Number(d?.getDataValue('status'));
+                });
+                if (status === 3)
+                    return res.status(400).json({ message: "Banned user" });
                 //? 먼저 해당 유저가 해당 피드에대해 좋아요를 누른적이 있는지 찾는다.
                 const isLiked = await like_1.Likes.findOne({ where: { feedId, userId } }).then(d => {
                     if (d)

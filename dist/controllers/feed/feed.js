@@ -34,6 +34,11 @@ const feedHandler = {
                     }
                     const strContent = JSON.stringify(content);
                     const userId = decoded.id;
+                    const status = await user_1.Users.findOne({ where: { id: userId }, attributes: ['status'] }).then(d => {
+                        return Number(d?.getDataValue('status'));
+                    });
+                    if (status === 3)
+                        return res.status(400).json({ message: "Banned user" });
                     const topic = await topic_1.Topics.findOne({ where: { word } });
                     if (!topic) {
                         res.status(404).json({ message: 'The topic is not fonud' });
@@ -41,7 +46,7 @@ const feedHandler = {
                     else {
                         const topicId = topic.getDataValue('id');
                         await feed_1.Feeds.create({ content: strContent, topicId, userId }).then(d => {
-                            res.status(201).json({ message: 'The feed was uploaded' });
+                            res.status(201).json({ message: 'The feed is uploaded' });
                         });
                     }
                 }
@@ -141,10 +146,15 @@ const feedHandler = {
             }
             ;
             const userId = decoded.id;
+            const status = await user_1.Users.findOne({ where: { id: userId }, attributes: ['status'] }).then(d => {
+                return Number(d?.getDataValue('status'));
+            });
+            if (status === 3)
+                return res.status(400).json({ message: "Banned user" });
             //? admin 처리
             let where = { id: feedId, userId };
-            let message = `The feed ${feedId} was removed`;
-            if (decoded.status === 9) {
+            let message = `The feed ${feedId} is removed`;
+            if (status === 9) {
                 where = { id: feedId };
                 message = 'admin: ' + message;
             }
@@ -178,9 +188,14 @@ const feedHandler = {
                 return res.status(401).json({ message: 'Invalid token' });
             const userId = decoded.id;
             //? 모든 유효성 검사 후 수정.
+            const status = await user_1.Users.findOne({ where: { id: userId }, attributes: ['status'] }).then(d => {
+                return Number(d?.getDataValue('status'));
+            });
+            if (status === 3)
+                return res.status(400).json({ message: "Banned user" });
             let where = { id: feedId, userId };
-            let message = `The feed ${feedId} was edited`;
-            if (decoded.status === 9) {
+            let message = `The feed ${feedId} is edited`;
+            if (status === 9) {
                 where = { id: feedId };
                 message = 'admin: ' + message;
             }

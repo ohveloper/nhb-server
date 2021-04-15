@@ -24,11 +24,16 @@ const commentHandler = {
             if (err)
                 return res.status(401).json({ message: 'Invalid token' });
             const userId = decode.id;
+            const status = await user_1.Users.findOne({ where: { id: userId }, attributes: ['status'] }).then(d => {
+                return Number(d?.getDataValue('status'));
+            });
+            if (status === 3)
+                return res.status(400).json({ message: "Banned user" });
             await comment_1.Comments.create({ comment, feedId, userId })
                 .then(async (d) => {
                 await comment_1.Comments.count({ where: { feedId } }).then(async (d) => {
                     await feed_1.Feeds.update({ commentNum: d }, { where: { id: feedId } }).then(d => {
-                        res.status(201).json({ message: "The comment was uploaded" });
+                        res.status(201).json({ message: "The comment is uploaded" });
                     });
                 });
             })
@@ -51,6 +56,11 @@ const commentHandler = {
             if (err)
                 return res.status(401).json({ message: 'Invalid token' });
             const userId = decoded.id;
+            const status = await user_1.Users.findOne({ where: { id: userId }, attributes: ['status'] }).then(d => {
+                return Number(d?.getDataValue('status'));
+            });
+            if (status === 3)
+                return res.status(400).json({ message: "Banned user" });
             await comment_1.Comments.findOne({ where: { id: commentId } }).then((d) => {
                 if (!d)
                     return res.status(404).json({ message: 'The comment does not exist' });
@@ -89,8 +99,13 @@ const commentHandler = {
                 return res.status(401).json({ message: 'Invalid token' });
             const userId = decoded.id;
             let where = { id: commentId, userId, feedId };
-            let message = `The comment ${commentId} was removed`;
-            if (decoded.status === 9) {
+            let message = `The comment ${commentId} is removed`;
+            const status = await user_1.Users.findOne({ where: { id: userId }, attributes: ['status'] }).then(d => {
+                return Number(d?.getDataValue('status'));
+            });
+            if (status === 3)
+                return res.status(400).json({ message: "Banned user" });
+            if (status === 9) {
                 where = { id: commentId, feedId };
                 message = 'admin: ' + message;
             }
@@ -120,8 +135,13 @@ const commentHandler = {
                 return res.status(401).json({ message: 'Invalid token' });
             const userId = decoded.id;
             let where = { id: commentId, userId };
-            let message = `The coment ${commentId} was edited`;
-            if (decoded.status === 9) {
+            let message = `The coment ${commentId} is edited`;
+            const status = await user_1.Users.findOne({ where: { id: userId }, attributes: ['status'] }).then(d => {
+                return Number(d?.getDataValue('status'));
+            });
+            if (status === 3)
+                return res.status(400).json({ message: "Banned user" });
+            if (status === 9) {
                 where = { id: commentId };
                 message = 'admin: ' + message;
             }
@@ -168,7 +188,7 @@ const commentHandler = {
             comments.push(cmt);
         }
         ;
-        res.status(200).json({ data: { comments }, message: `Feed ${feedId}\`s comment` });
+        res.status(200).json({ data: { comments }, message: `Feed ${feedId}\`s comments` });
     }
 };
 exports.default = commentHandler;

@@ -89,6 +89,13 @@ const userHandler = {
     const accTokenSecret = process.env.ACCTOKEN_SECRET || 'acctest';
      jwt.verify(accessToken, accTokenSecret, async (err, decoded: any) => {
        if (err) return res.status(400).json({message: 'Invalid token'});
+
+       const status: number = await Users.findOne({where:{id: decoded.id}, attributes: ['status']}).then(d => {
+        return Number(d?.getDataValue('status'));
+      });
+      if (status === 3) return res.status(400).json({message: "Banned user"});
+
+
        await Users.update({ avatarUrl, nickName, introduction }, { where: {id: decoded.id} }).then(d => {
          res.status(200).json({edittedInfo: { nickName, introduction, avatarUrl },message: 'Userinfo was edited'});
        });
@@ -103,7 +110,7 @@ const userHandler = {
     const accTokenSecret = process.env.ACCTOKEN_SECRET || 'acctest';
     jwt.verify(accessToken, accTokenSecret, async (err, decoded: any) => {
       if (err) return res.status(400).json({message: 'Invalid token'});
-      await Users.destroy({where: {id: decoded.id}}).then(d => res.status(200).json({message: 'The user was removed in db'}));
+      await Users.destroy({where: {id: decoded.id}}).then(d => res.status(200).json({message: 'The user is removed in db'}));
     });
   }
 };

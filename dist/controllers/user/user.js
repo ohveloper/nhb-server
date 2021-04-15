@@ -94,6 +94,11 @@ const userHandler = {
         jsonwebtoken_1.default.verify(accessToken, accTokenSecret, async (err, decoded) => {
             if (err)
                 return res.status(400).json({ message: 'Invalid token' });
+            const status = await user_1.Users.findOne({ where: { id: decoded.id }, attributes: ['status'] }).then(d => {
+                return Number(d?.getDataValue('status'));
+            });
+            if (status === 3)
+                return res.status(400).json({ message: "Banned user" });
             await user_1.Users.update({ avatarUrl, nickName, introduction }, { where: { id: decoded.id } }).then(d => {
                 res.status(200).json({ edittedInfo: { nickName, introduction, avatarUrl }, message: 'Userinfo was edited' });
             });
@@ -108,7 +113,7 @@ const userHandler = {
         jsonwebtoken_1.default.verify(accessToken, accTokenSecret, async (err, decoded) => {
             if (err)
                 return res.status(400).json({ message: 'Invalid token' });
-            await user_1.Users.destroy({ where: { id: decoded.id } }).then(d => res.status(200).json({ message: 'The user was removed in db' }));
+            await user_1.Users.destroy({ where: { id: decoded.id } }).then(d => res.status(200).json({ message: 'The user is removed in db' }));
         });
     }
 };
