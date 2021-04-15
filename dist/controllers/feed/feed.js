@@ -121,7 +121,7 @@ const feedHandler = {
             const user = { userId: usersFeeds.id, nickName: usersFeeds.nickName, tag };
             const newCreatedAt = new Date(new Date(createdAt).setHours(new Date(createdAt).getHours() + 9));
             const newUpdatedAt = new Date(new Date(updatedAt).setHours(new Date(updatedAt).getHours() + 9));
-            const userFeed = { feedId: id, user, topic: topicsFeeds.word, content, likeNum, commentNum, createdAt: newCreatedAt, updatedAt: newUpdatedAt };
+            const userFeed = { feedId: id, user, topic: topicsFeeds.word, content: JSON.parse(content), likeNum, commentNum, createdAt: newCreatedAt, updatedAt: newUpdatedAt };
             userFeeds.push(userFeed);
         }
         res.status(200).json({ data: { userFeeds }, message: 'All feeds' });
