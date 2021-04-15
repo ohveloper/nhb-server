@@ -3,10 +3,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const dotenv_1 = __importDefault(require("dotenv"));
 const sequelize_1 = __importDefault(require("sequelize"));
 const topic_1 = require("../../models/topic");
-dotenv_1.default.config();
 //? 어드민 체크를 거친 후
 const topicHandler = {
     //? 토픽 생성
@@ -26,7 +24,7 @@ const topicHandler = {
                 return res.status(400).json({ message: 'The expiration date already exists' });
             //? 모든 유효성 검사 후 생성
             await topic_1.Topics.create({ word, expiration }).then(d => {
-                return res.status(201).json({ message: 'Admin: Topic was uploaded' });
+                return res.status(201).json({ message: 'Admin: Topic is uploaded' });
             });
         }
     },
@@ -66,7 +64,7 @@ const topicHandler = {
             if (d[0] === 0)
                 return res.status(400).json({ message: 'ID does not exists' });
             else
-                return res.status(200).json({ message: 'Admin: The Topic was edited successfully' });
+                return res.status(200).json({ message: 'Admin: The Topic is edited successfully' });
         });
     }
 };

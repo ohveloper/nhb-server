@@ -1,8 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import dotenv from 'dotenv';
 import Sequelize from 'sequelize';
 import { Topics } from '../../models/topic';
-dotenv.config();
 
 //? 어드민 체크를 거친 후
 const topicHandler = {
@@ -20,7 +18,7 @@ const topicHandler = {
       if (isDupDate) return res.status(400).json({message: 'The expiration date already exists'});
       //? 모든 유효성 검사 후 생성
       await Topics.create({word, expiration}).then(d => {
-        return res.status(201).json({message: 'Admin: Topic was uploaded'});
+        return res.status(201).json({message: 'Admin: Topic is uploaded'});
       });
     }
   },
@@ -56,7 +54,7 @@ const topicHandler = {
     //? 모든 유효성 검사 후 업데이트
     await Topics.update({word}, {where: {id: topicId}}).then(d => {
       if (d[0] ===0) return res.status(400).json({message: 'ID does not exists'});
-      else return res.status(200).json({message: 'Admin: The Topic was edited successfully'});
+      else return res.status(200).json({message: 'Admin: The Topic is edited successfully'});
     })
   }
 };
