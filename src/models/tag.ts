@@ -5,15 +5,17 @@ import {
 import { sequelize } from './index';
 
 interface TagsAttributes {
-  id?: number,
-  tagName: string,
-  description: string | null
+  id?: number;
+  tagName: string;
+  description: string | null;
+  tagUrl: string | null;
 };
 
 export class Tags extends Model <TagsAttributes> {
   public readonly id!: number;
   public tagName!: string;
-  public description!: string;
+  public description!: string | null;
+  public tagUrl!: string | null;
 
   public static associations: {
   };
@@ -26,6 +28,10 @@ Tags.init(
       allowNull: false
     },
     description: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    tagUrl: {
       type: DataTypes.STRING,
       allowNull: true
     }

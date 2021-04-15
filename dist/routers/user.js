@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const { bring, edit, withdrawal, liveRank, like, comment, cmtLike } = require('../controllers/user');
+const { bring, edit, withdrawal, liveRank, like, comment, cmtLike, tag } = require('../controllers/user');
 const router = express_1.Router();
 router.post('/', bring);
 router.patch('/', edit);
@@ -11,4 +11,6 @@ router.get('/', liveRank);
 router.get('/activity/like', like);
 router.get('/activity/comment', comment);
 router.get('/activity/cmtLike', cmtLike);
+//? 모든 태그 내려주기
+router.get('/tag', tag);
 exports.default = router;
