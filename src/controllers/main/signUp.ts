@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
 import { Users } from '../../models/user';
+import { Users_tags } from '../../models/users_tag';
 
 const signUp = async (req: Request, res: Response, next: NextFunction) => {
   const { authCode } = req.body;
@@ -27,6 +28,7 @@ const signUp = async (req: Request, res: Response, next: NextFunction) => {
         const domain = process.env.CLIENT_DOMAIN || 'localhost';
         const accessToken = issueToken(accTokenSecret, '5h');
         const refreshToken = issueToken(refTokenSecret, '15d');
+        await Users_tags.create({tagId: 1, userId: id, isUsed:0 });
       
         res.status(200)
         .cookie('refreshToken', refreshToken, {
