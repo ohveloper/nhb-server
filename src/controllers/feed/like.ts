@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { Feeds } from '../../models/feed';
 import { Likes } from '../../models/like';
+import { Users } from '../../models/user';
 
 //? 좋아요와 좋아요 취소 구현
 const likeHandler = (req: Request, res:Response, next: NextFunction) => {
@@ -18,6 +19,11 @@ const likeHandler = (req: Request, res:Response, next: NextFunction) => {
         const { feedId } = req.body;
         if (!feedId) return res.status(400).json({message: 'Need accurate informaions'});
         const userId = decoded.id;
+        const status: number = await Users.findOne({where:{id: userId}, attributes: ['status']}).then(d => {
+          return Number(d?.getDataValue('status'));
+        });
+        if (status === 3) return res.status(400).json({message: "Banned user"});
+  
         //? 먼저 해당 유저가 해당 피드에대해 좋아요를 누른적이 있는지 찾는다.
         const isLiked:boolean = await Likes.findOne({where: {feedId, userId}}).then(d => {
           if (d) return true;

@@ -18,9 +18,11 @@ const login = async (req, res, next) => {
         //? 토큰 발급하는 함수
         const id = Number(userInfo.id);
         const status = Number(userInfo.getDataValue('status'));
+        if (status === 3)
+            return res.status(400).json({ message: "Banned user" });
         const issueToken = (secret, expiresIn) => {
             if (status === 9)
-                return jsonwebtoken_1.default.sign({ id, status }, secret, { expiresIn: '1h' });
+                return jsonwebtoken_1.default.sign({ id }, secret, { expiresIn: '3h' });
             else
                 return jsonwebtoken_1.default.sign({ id }, secret, { expiresIn });
         };

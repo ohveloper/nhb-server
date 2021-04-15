@@ -7,6 +7,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const user_1 = require("../../models/user");
+const users_tag_1 = require("../../models/users_tag");
 const signUp = async (req, res, next) => {
     const { authCode } = req.body;
     const userInfo = await user_1.Users.findOne({ where: { authCode } });
@@ -31,6 +32,7 @@ const signUp = async (req, res, next) => {
             const domain = process.env.CLIENT_DOMAIN || 'localhost';
             const accessToken = issueToken(accTokenSecret, '5h');
             const refreshToken = issueToken(refTokenSecret, '15d');
+            await users_tag_1.Users_tags.create({ tagId: 1, userId: id, isUsed: 0 });
             res.status(200)
                 .cookie('refreshToken', refreshToken, {
                 domain,
