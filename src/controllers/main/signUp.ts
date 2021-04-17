@@ -25,7 +25,7 @@ const signUp = async (req: Request, res: Response, next: NextFunction) => {
     await Users.update({authCode: null, status: 1}, {where: { id }}).then( async (data) => {
         const accTokenSecret = process.env.ACCTOKEN_SECRET || 'acctest';
         const refTokenSecret = process.env.REFTOKEN_SECRET || 'reftest';
-        const domain = process.env.CLIENT_DOMAIN || 'localhost';
+        const domain = process.env.COOKIE_DOMAIN || 'localhost';
         const accessToken = issueToken(accTokenSecret, '5h');
         const refreshToken = issueToken(refTokenSecret, '15d');
         await Users_tags.create({tagId: 1, userId: id, isUsed:0 });
@@ -33,7 +33,7 @@ const signUp = async (req: Request, res: Response, next: NextFunction) => {
         res.status(200)
         .cookie('refreshToken', refreshToken, {
           domain,
-          path: '/',
+          path: '/main',
           httpOnly: true,
           secure: true,
           sameSite: 'none'

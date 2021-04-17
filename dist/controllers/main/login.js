@@ -30,17 +30,18 @@ const login = async (req, res, next) => {
         await user_1.Users.update({ authCode: null }, { where: { id } }).then(data => {
             const accTokenSecret = process.env.ACCTOKEN_SECRET || 'acctest';
             const refTokenSecret = process.env.REFTOKEN_SECRET || 'reftest';
-            const domain = process.env.CLIENT_DOMAIN || 'localhost';
+            const domain = process.env.COOKIE_DOMAIN || 'localhost';
             const accessToken = issueToken(accTokenSecret, '5h');
             const refreshToken = issueToken(refTokenSecret, '15d');
             let resMessage = { data: { accessToken: accessToken }, message: "Login" };
             if (status === 9) {
                 resMessage = { data: { accessToken: accessToken, isAdmin: true }, message: "Admin accessed" };
             }
+            //? document.cookie 방지, secure-> https만 가능, path -> path 제한, domain -> subdomain
             res.status(200)
                 .cookie('refreshToken', refreshToken, {
                 domain,
-                path: '/',
+                path: '/main',
                 httpOnly: true,
                 secure: true,
                 sameSite: 'none'
