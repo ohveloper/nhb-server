@@ -1,7 +1,7 @@
 import userHandler from './user';
 import liveRank from './liveRank';
 import userActHandler from './userActivity';
-import tag from './tag';
+import tagHandler from './tag';
 import apt from './apartment';
 
 module.exports = {
@@ -12,6 +12,7 @@ module.exports = {
   like: userActHandler.like,
   comment: userActHandler.comment,
   cmtLike: userActHandler.cmtLike,
-  tag,
+  tagBring: tagHandler.bring,
+  tagEdit: tagHandler.edit,
   apt
 };

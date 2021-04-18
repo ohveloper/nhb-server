@@ -16,6 +16,7 @@ module.exports = {
     like: userActivity_1.default.like,
     comment: userActivity_1.default.comment,
     cmtLike: userActivity_1.default.cmtLike,
-    tag: tag_1.default,
+    tagBring: tag_1.default.bring,
+    tagEdit: tag_1.default.edit,
     apt: apartment_1.default
 };
