@@ -107,6 +107,8 @@ const feedHandler = {
             attributes: ['id', 'content', 'likeNum', 'commentNum', 'createdAt', 'updatedAt'] })
             .catch(e => { console.log('get feeds error', e); });
         const userFeeds = [];
+        if (temp === undefined)
+            return res.status(200).json({ data: { userFeeds }, message: 'All feeds' });
         for (let i = 0; i < temp.length; i += 1) {
             const { id, content, likeNum, commentNum, usersFeeds, topicsFeeds, createdAt, updatedAt } = temp[i];
             let tag = null;
