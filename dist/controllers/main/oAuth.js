@@ -5,12 +5,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const crypto_1 = __importDefault(require("crypto"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const util_1 = __importDefault(require("util"));
 dotenv_1.default.config();
 const oauth_1 = require("../../models/oauth");
 const user_1 = require("../../models/user");
 const oAuthHandler = async (req, res, next) => {
     const accessToken = req.headers.authorization;
+    const randByte = util_1.default.promisify(crypto_1.default.randomBytes);
+    const pbkdf2 = util_1.default.promisify(crypto_1.default.pbkdf2);
     //? google oauth를 통해 정보를 받아온다
     if (!accessToken)
         return res.status(401).json({ message: 'unauthorized' });
@@ -25,8 +29,15 @@ const oAuthHandler = async (req, res, next) => {
     }).catch(e => console.log('oAuth token expired'));
     //? 받아온 정보의 email과 고유 id로 식별
     const { email, id } = oAuthData;
-    const oAuthInfo = await oauth_1.OAuths.findOne({ where: { oAuthId: id }, raw: true });
+    const salt = await randByte(64).then(d => d.toString('base64')).catch(e => { console.log('hashingerror'); });
+    const hashedId = await pbkdf2(id, salt, 100000, 64, 'sha512').then(d => d.toString('base64')).catch(e => { console.log('hashingerror'); });
     const userInfo = await user_1.Users.findOne({ where: { email }, raw: true });
+    let oAuthInfo = null;
+    let status = null;
+    if (userInfo) {
+        status = userInfo.status;
+        oAuthInfo = await oauth_1.OAuths.findOne({ where: { userId: userInfo.id }, raw: true });
+    }
     const issueToken = (secret, expiresIn, id, status) => {
         if (status === 9)
             return jsonwebtoken_1.default.sign({ id: id }, secret, { expiresIn: '3h' });
@@ -38,28 +49,31 @@ const oAuthHandler = async (req, res, next) => {
     const domain = process.env.COOKIE_DOMAIN || 'localhost';
     let issuedAccessToken, refreshToken, message = '';
     //? oauth id와 email로 된 user가 존재하지 않을 경우 회원가입
-    if (!oAuthInfo && !userInfo) {
+    if (!oAuthInfo && !userInfo && hashedId) {
         const nickName = '시인' + Math.random().toString(36).slice(2);
         await user_1.Users.create({ email, nickName, introduction: null, avatarUrl: null, authCode: null, status: 1 }).then(async (d) => {
-            await oauth_1.OAuths.create({ userId: d.id, oAuthId: id, platform: 'google' });
+            await oauth_1.OAuths.create({ userId: d.id, oAuthId: hashedId, platform: 'google', salt });
             issuedAccessToken = await issueToken(accTokenSecret, '5h', d.id);
             refreshToken = await issueToken(refTokenSecret, '14d', d.id);
             message = 'Sign up';
         });
     }
     ;
-    const { status } = userInfo;
     //? email의 회원 정보만 존재할 경우 oauth랑 연동
-    if (userInfo && !oAuthInfo) {
-        await oauth_1.OAuths.create({ userId: userInfo.id, oAuthId: id, platform: 'google' });
+    if (userInfo && !oAuthInfo && hashedId) {
+        await oauth_1.OAuths.create({ userId: userInfo.id, oAuthId: hashedId, platform: 'google', salt });
         issuedAccessToken = await issueToken(accTokenSecret, '5h', userInfo.id, status);
         refreshToken = await issueToken(refTokenSecret, '14d', userInfo.id, status);
         message = 'Login';
     }
     //? 둘 다 존재할 경우 로그인
     if (userInfo && oAuthInfo) {
-        const { userId } = oAuthInfo;
+        const { userId, oAuthId } = oAuthInfo;
+        const savedSalt = oAuthInfo.salt;
         if (userId !== userInfo.id)
+            return res.status(401).json({ message: 'unauthorized' });
+        const decodedId = await pbkdf2(id, savedSalt, 100000, 64, 'sha512').then(d => d.toString('base64')).catch(e => { console.log('hashingerror'); });
+        if (decodedId !== oAuthId)
             return res.status(401).json({ message: 'unauthorized' });
         issuedAccessToken = await issueToken(accTokenSecret, '5h', userId, status);
         refreshToken = await issueToken(refTokenSecret, '14d', userId, status);
