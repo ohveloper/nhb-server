@@ -41,13 +41,13 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
       //? document.cookie 방지, secure-> https만 가능, path -> path 제한, domain -> subdomain
        res.status(200)
        .cookie('refreshToken', refreshToken, {
-         domain,
-         path: '/main',
-         httpOnly: true,
-         secure: true,
-         sameSite: 'none'
-       })
-       .json(resMessage)
+          domain,
+          path: '/main',
+          httpOnly: true,
+          secure: true,
+          sameSite: 'none'
+        })
+        .json(resMessage)
       }
     );
   }
