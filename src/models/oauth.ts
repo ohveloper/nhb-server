@@ -1,4 +1,5 @@
 import {
+  Association,
   DataTypes, 
   Model, 
 } from 'sequelize';
@@ -6,18 +7,21 @@ import {sequelize} from './index';
 import { Users } from './user';
 
 interface OauthsAttributes {
-  platform : string,
-  oAuthId : number,
-  userId : number
+  platform : string;
+  oAuthId : string;
+  userId : number;
+  userIdOauth?: any;
 };
 
 export class OAuths extends Model <OauthsAttributes> {
   public readonly id!: number;
   public platform!: string;
-  public oAuthId!: number;
+  public oAuthId!: string;
   public userId!: number;
+  public userIdOauth!: any;
 
   public static associations: {
+    userIdOauth: Association<Users, OAuths>;
   };
 };
 
@@ -47,4 +51,10 @@ OAuths.init(
 Users.hasMany(OAuths, {
   sourceKey : "id",
   foreignKey : "userId",
+  as: 'userIdOauth'
 });
+
+OAuths.belongsTo(Users, {
+  foreignKey: 'userId',
+  as: 'userIdOauth'
+})

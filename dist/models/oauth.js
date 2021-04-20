@@ -31,4 +31,9 @@ OAuths.init({
 user_1.Users.hasMany(OAuths, {
     sourceKey: "id",
     foreignKey: "userId",
+    as: 'userIdOauth'
+});
+OAuths.belongsTo(user_1.Users, {
+    foreignKey: 'userId',
+    as: 'userIdOauth'
 });
