@@ -104,7 +104,7 @@ const feedHandler = {
         },
       ],
       attributes: ['id', 'content', 'likeNum', 'commentNum', 'createdAt', 'updatedAt']})
-      .catch(e => {console.log('get feeds error', e)});
+      .catch(e => {console.log('get feeds error')});
       
       const userFeeds:{}[] = []
       if (temp === undefined) return res.status(200).json({data: {userFeeds}, message: 'All feeds'});

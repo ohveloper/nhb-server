@@ -18,7 +18,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
     if (status === 3) return res.status(400).json({message: "Banned user"});
 
     const issueToken = (secret: string, expiresIn: string) => {
-      if (status === 9) return jwt.sign({ id }, secret, { expiresIn: '3h' });
+      if (status === 9) return jwt.sign({ id, status }, secret, { expiresIn: '3h' });
       else return jwt.sign({ id }, secret, { expiresIn });
     };
 

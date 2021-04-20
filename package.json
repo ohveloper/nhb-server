@@ -9,7 +9,8 @@
     "build": "tsc -p .",
     "start": "pm2 start ./dist/app.js",
     "restart": "pm2 restart ./dist/app.js",
-    "stop": "pm2 stop ./dist/app.js"
+    "stop": "pm2 stop ./dist/app.js",
+    "db-table": "node ./dist/migrations/migration-all-tables.js"
   },
   "repository": {
     "type": "git",

@@ -15,7 +15,7 @@ OAuths.init({
         allowNull: false
     },
     oAuthId: {
-        type: sequelize_1.DataTypes.INTEGER,
+        type: sequelize_1.DataTypes.STRING,
         allowNull: false
     },
     userId: {
