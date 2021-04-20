@@ -10,6 +10,7 @@ interface OauthsAttributes {
   platform : string;
   oAuthId : string;
   userId : number;
+  salt: string;
   userIdOauth?: any;
 };
 
@@ -18,6 +19,7 @@ export class OAuths extends Model <OauthsAttributes> {
   public platform!: string;
   public oAuthId!: string;
   public userId!: number;
+  public salt!: string;
   public userIdOauth!: any;
 
   public static associations: {
@@ -38,6 +40,10 @@ OAuths.init(
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
+    },
+    salt: {
+      type: DataTypes.STRING,
+      allowNull: false
     }
   },
   {

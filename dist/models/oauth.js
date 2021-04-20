@@ -21,6 +21,10 @@ OAuths.init({
     userId: {
         type: sequelize_1.DataTypes.INTEGER,
         allowNull: false,
+    },
+    salt: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: false
     }
 }, {
     modelName: 'OAuths',
