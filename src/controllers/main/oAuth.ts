@@ -31,14 +31,14 @@ const oAuthHandler = async (req: Request, res: Response, next: NextFunction) => 
 
   const userInfo: any = await Users.findOne({where: {email}, raw: true});
   let oAuthInfo = null;
-  let status = null;
+  let status: number | null = null;
   if (userInfo) {
-    status = userInfo.status;
+    status = Number(userInfo.status);
     oAuthInfo = await OAuths.findOne({where: {userId: userInfo.id}, raw: true});
   }
   
-  const issueToken = (secret: string, expiresIn: string, id: number, status?: number | null) => {
-      if (status === 9) return jwt.sign({ id: id }, secret, { expiresIn: '3h' });
+  const issueToken = (secret: string, expiresIn: string, id: number, status?: number | null ) => {
+      if (status === 9) return jwt.sign({ id: id, status}, secret, { expiresIn: '3h' });
       else return jwt.sign({ id: id }, secret, { expiresIn });
     };
   const accTokenSecret = process.env.ACCTOKEN_SECRET || 'acctest';

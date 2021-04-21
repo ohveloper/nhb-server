@@ -22,7 +22,7 @@ const login = async (req, res, next) => {
             return res.status(400).json({ message: "Banned user" });
         const issueToken = (secret, expiresIn) => {
             if (status === 9)
-                return jsonwebtoken_1.default.sign({ id }, secret, { expiresIn: '3h' });
+                return jsonwebtoken_1.default.sign({ id, status }, secret, { expiresIn: '3h' });
             else
                 return jsonwebtoken_1.default.sign({ id }, secret, { expiresIn });
         };

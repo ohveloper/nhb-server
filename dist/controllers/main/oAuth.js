@@ -35,12 +35,12 @@ const oAuthHandler = async (req, res, next) => {
     let oAuthInfo = null;
     let status = null;
     if (userInfo) {
-        status = userInfo.status;
+        status = Number(userInfo.status);
         oAuthInfo = await oauth_1.OAuths.findOne({ where: { userId: userInfo.id }, raw: true });
     }
     const issueToken = (secret, expiresIn, id, status) => {
         if (status === 9)
-            return jsonwebtoken_1.default.sign({ id: id }, secret, { expiresIn: '3h' });
+            return jsonwebtoken_1.default.sign({ id: id, status }, secret, { expiresIn: '3h' });
         else
             return jsonwebtoken_1.default.sign({ id: id }, secret, { expiresIn });
     };

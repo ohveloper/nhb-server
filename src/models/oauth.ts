@@ -34,7 +34,7 @@ OAuths.init(
       allowNull: false
     },
     oAuthId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false
     },
     userId: {
