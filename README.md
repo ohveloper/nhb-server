@@ -41,7 +41,8 @@
 
 
 ### Server Workflow
-![NHB (2)](https://user-images.githubusercontent.com/67426853/113650920-02d5e880-96cc-11eb-833d-a24d01397a90.jpg)
+![NHB (2)](https://user-images.githubusercontent.com/74767120/115688673-5156d880-a396-11eb-8669-74fcc63b0396.png)
+)
 
 
 # 😈 Team BBBA!
