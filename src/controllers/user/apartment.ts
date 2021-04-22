@@ -1,11 +1,11 @@
 import e, { Request, Response, NextFunction } from 'express';
 import { Feeds } from '../../models/feed';
-import weekArray from '../func/weekArray';
+import arrFunc from '../func/weekArray';
 
 const apt = async (req: Request, res: Response, next: NextFunction) => {
   const { userId } = req.body;
   if (!userId) return res.status(400).json({message: 'Need accurate informations'});
-  const weekArr = weekArray.slice();
+  const weekArr = arrFunc().slice();
   const getFeeds = await Feeds.findAll({where: {userId}, attributes: ['createdAt'], raw: true}).then(d => {
     const obj: any = {};
 
