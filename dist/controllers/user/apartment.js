@@ -9,7 +9,7 @@ const apt = async (req, res, next) => {
     const { userId } = req.body;
     if (!userId)
         return res.status(400).json({ message: 'Need accurate informations' });
-    const weekArr = weekArray_1.default.slice();
+    const weekArr = weekArray_1.default().slice();
     const getFeeds = await feed_1.Feeds.findAll({ where: { userId }, attributes: ['createdAt'], raw: true }).then(d => {
         const obj = {};
         d.forEach(feed => {
