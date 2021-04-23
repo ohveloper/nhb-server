@@ -57,7 +57,7 @@ const feedHandler = {
     bring: async (req, res, next) => {
         const Op = sequelize_1.default.Op;
         const { topicId, isMaxLike, limit, userId, feedId } = req.body;
-        if (!limit || !topicId)
+        if (!limit)
             return res.status(400).json({ message: 'Need accurate informaions' });
         const startFeedId = feedId ? await feed_1.Feeds.max('id', { where: { id: { [Op.lt]: feedId } } }).then(d => {
             if (!d)
@@ -66,14 +66,18 @@ const feedHandler = {
         }) : await feed_1.Feeds.max('id'); //? 계속탐색
         if (startFeedId === -1)
             return res.status(200).json({ data: { userFeeds: [] }, message: 'ok' });
-        let where = { id: { [Op.lte]: startFeedId }, topicId };
+        let where = { id: { [Op.lte]: startFeedId } };
         let order = [['id', 'DESC']];
         if (userId) {
-            where['userId'] = userId;
+            where['userId'] = Number(userId);
         }
         ;
         if (isMaxLike) {
             order = [['likeNum', 'DESC']];
+        }
+        ;
+        if (topicId) {
+            where['topicId'] = Number(topicId);
         }
         ;
         const temp = await feed_1.Feeds.findAll({ order: order, limit: limit,
