@@ -87,7 +87,7 @@ const oAuthHandler = async (req: Request, res: Response, next: NextFunction) => 
   if (!issuedAccessToken) return console.log('token issue error');
   let resMessage: ResMessage = {data: {accessToken: issuedAccessToken}, message: message};
   if (Number(status) === 9) {
-    resMessage = {data: {accessToken: accessToken, isAdmin: true}, message: "Admin accessed"};
+    resMessage = {data: {accessToken: issuedAccessToken, isAdmin: true}, message: "Admin accessed"};
   }
 
   res.status(200)
