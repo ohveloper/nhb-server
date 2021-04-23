@@ -11,6 +11,7 @@ const util_1 = __importDefault(require("util"));
 dotenv_1.default.config();
 const oauth_1 = require("../../models/oauth");
 const user_1 = require("../../models/user");
+const users_tag_1 = require("../../models/users_tag");
 const oAuthHandler = async (req, res, next) => {
     const accessToken = req.headers.authorization;
     const randByte = util_1.default.promisify(crypto_1.default.randomBytes);
@@ -53,6 +54,7 @@ const oAuthHandler = async (req, res, next) => {
         const nickName = '시인' + Math.random().toString(36).slice(2);
         await user_1.Users.create({ email, nickName, introduction: null, avatarUrl: null, authCode: null, status: 1 }).then(async (d) => {
             await oauth_1.OAuths.create({ userId: d.id, oAuthId: hashedId, platform: 'google', salt });
+            await users_tag_1.Users_tags.create({ tagId: 1, userId: d.id, isUsed: 0 });
             issuedAccessToken = await issueToken(accTokenSecret, '5h', d.id);
             refreshToken = await issueToken(refTokenSecret, '14d', d.id);
             message = 'Sign up';
