@@ -7,6 +7,7 @@ import util from 'util';
 dotenv.config();
 import { OAuths } from '../../models/oauth';
 import { Users } from '../../models/user';
+import { Users_tags } from '../../models/users_tag';
 
 const oAuthHandler = async (req: Request, res: Response, next: NextFunction) => {
   const accessToken = req.headers.authorization;
@@ -51,6 +52,7 @@ const oAuthHandler = async (req: Request, res: Response, next: NextFunction) => 
     const nickName:string = '시인' + Math.random().toString(36).slice(2);
     await Users.create({email, nickName, introduction: null, avatarUrl: null, authCode: null, status: 1}).then( async (d) => {
       await OAuths.create({userId: d.id, oAuthId: hashedId, platform: 'google', salt});
+      await Users_tags.create({tagId: 1, userId: d.id, isUsed:0 });
       issuedAccessToken = await issueToken(accTokenSecret, '5h', d.id);
       refreshToken = await issueToken(refTokenSecret, '14d', d.id);
       message = 'Sign up';
