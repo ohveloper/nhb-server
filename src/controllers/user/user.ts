@@ -83,7 +83,7 @@ const userHandler = {
     const { authorization } = req.headers;
     const { avatarUrl, nickName, introduction } = req.body;
     if (!authorization) return res.status(401).json({message: 'Unauthoriazed'});
-    if (!avatarUrl || !nickName || !introduction) return res.status(400).json({message: 'Need accurate informations'});
+    if (!avatarUrl || !nickName) return res.status(400).json({message: 'Need accurate informations'});
 
     const accessToken = authorization.split(' ')[1];
     const accTokenSecret = process.env.ACCTOKEN_SECRET || 'acctest';
