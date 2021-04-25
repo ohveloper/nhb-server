@@ -38,6 +38,10 @@
 <img src="https://img.shields.io/badge/Express.js-404D59?style=for-the-badge"/>
 <img src="https://img.shields.io/badge/MySQL-00000F?style=for-the-badge&logo=mysql&logoColor=white"/>
 <img src="https://img.shields.io/badge/Amazon_AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white"/>
+![노드메일러](https://user-images.githubusercontent.com/74767120/115989494-9fb7e180-a5f9-11eb-9e0b-69dfe6896e68.png)
+![axios](https://user-images.githubusercontent.com/74767120/115989496-a0e90e80-a5f9-11eb-9575-dfe0f9000f7e.png)
+![ejs](https://user-images.githubusercontent.com/74767120/115989497-a181a500-a5f9-11eb-900b-87ddb7289314.jpeg)
+![jwt](https://user-images.githubusercontent.com/74767120/115989499-a2b2d200-a5f9-11eb-868f-ccab9de91cd4.jpeg)
 
 # 🛠️ Architecture
 ### Client Workflow
