@@ -13,25 +13,27 @@
 
 1.기발한 **N행시**를 작성해보세요!
 <br>
+<img width=640px src="https://user-images.githubusercontent.com/74767120/116180250-87f47080-a753-11eb-9187-3b8d2f94d2e1.gif"/>
 <br>
 2.N행시에 대한 소감을 **댓글**로 남겨보세요!
 <br>
 <br>
 3.기발한 N행시에 대해 **별(좋아요)** 을 주세요!
 <br>
+<img width=640px src="https://user-images.githubusercontent.com/74767120/116180225-7d39db80-a753-11eb-9f49-794e7c9d1b4b.gif"/>
 <br>
 4.기발한 아이디어로 **인기 작가**가 되어보세요! **인기 작가**는 메인에 노출이 됩니다!
 <br>
+<img width=640px src="https://user-images.githubusercontent.com/74767120/116180242-82972600-a753-11eb-9c64-248275aee57d.gif"/>
 <br>
 5.N행시를 작성하여 **내 활동 기록**에 불을 켜보세요!/기발한 N행시로 **별(좋아요)** 을 모아보세요! 
 <br>
+<img width=640px src="https://user-images.githubusercontent.com/74767120/116180222-7ca14500-a753-11eb-8ab3-152fa3cd4ded.gif"/>
 <br>
 6.각종 업적을 달성하여 **뱃지**를 획득하세요!<br>
 <br>
+<img width=640px src="https://user-images.githubusercontent.com/74767120/116180197-7743fa80-a753-11eb-8aae-3750de53d7e4.gif"/>
 <br>
-
-* _"바쁜 일상에 가벼운 웃음을 주는 고마운 앱"_ - **평내동 오민교** 
-* _"자세히 보아야 이쁘다. 오래 보아야 사랑스럽다. 이 앱도 그렇다."_ - **밀양시 나태주님**
 <br>
 
 # 🧙‍♂️ SKILLS
