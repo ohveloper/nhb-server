@@ -18,6 +18,7 @@
 <br><br>
 2.N행시에 대한 소감을 **댓글**로 남겨보세요!
 <br>
+<img width=640px src="https://user-images.githubusercontent.com/66950387/116359546-e005a280-a839-11eb-94eb-fa26476718ec.gif"/>
 <br>
 <br><br>
 3.기발한 N행시에 대해 **별(좋아요)** 을 주세요!
