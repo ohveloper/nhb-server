@@ -1,4 +1,7 @@
 # 💥 N-Hang-Bomb!
+
+<img src="https://user-images.githubusercontent.com/74767120/115689082-b5799c80-a396-11eb-8721-e3cc49292098.png" width=100 />
+
 <br>
 
 ### 빡빡한 일상속에 달게 내리는 단비같은 작은 웃음.
